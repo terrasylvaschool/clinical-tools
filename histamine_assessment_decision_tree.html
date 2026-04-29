@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clinical Assessment of "Histamine Issues"</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #0d0d14; color: #e8e4dc; }
+    body { padding: 0; }
+  </style>
+
+  <!-- React + ReactDOM from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Babel Standalone for in-browser JSX compilation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js" crossorigin></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useCallback, useRef, useEffect } = React;
+
+    // ─── DATA: THE FULL DECISION TREE ───────────────────────────────────────────
+
+    const TREE = {
+      id: "root",
+      type: "entry",
+      title: "Client presents with suspected 'histamine issues' / MCAS",
+      body: "Client reports multisystem reactivity, food intolerances, flushing, GI distress, brain fog, skin reactions, or other symptoms they attribute to histamine or mast cell activation. They may carry a self-diagnosis or provider diagnosis of MCAS, or describe themselves as 'histamine intolerant.'",
+      annotation: "Before entering the tree: establish rapport. Acknowledge the reality of symptoms without endorsing or challenging any diagnostic labels.",
+      children: [
+        {
+          id: "safety-screen",
+          type: "safety",
+          title: "SAFETY SCREEN: Red flags requiring medical referral",
+          body: "Before proceeding with any herbal/nutritional assessment, screen for presentations that mimic MCAS but represent serious medical conditions. These need physician evaluation.",
+          children: [
+            {
+              id: "red-angioedema",
+              type: "safety",
+              title: "Angioedema WITHOUT concurrent urticaria?",
+              body: "Recurrent swelling (face, lips, tongue, extremities, abdomen) that is non-pruritic, slow-onset, and does NOT respond to antihistamines. Especially if episodes lack hives entirely.",
+              annotation: "Suspect: Hereditary angioedema (HAE). Bradykinin-mediated, not histamine-mediated. Laryngeal edema can be fatal. Antihistamines and the entire MCAS protocol are ineffective. Needs C4 and C1-inhibitor workup. REFER.",
+              children: []
+            },
+            {
+              id: "red-cardiovascular",
+              type: "safety",
+              title: "Episodic hypertensive crises with flushing?",
+              body: "Dramatic blood pressure spikes during episodes, with flushing, severe headache, diaphoresis (drenching sweats), tachycardia. The cardiovascular component is disproportionately prominent.",
+              annotation: "Suspect: Pheochromocytoma / paraganglioma. Catecholamine-secreting tumor. Hypertensive crisis risk. Needs plasma/urine metanephrines. REFER.",
+              children: []
+            },
+            {
+              id: "red-carcinoid",
+              type: "safety",
+              title: "Flushing + diarrhea + wheezing, minimal skin involvement?",
+              body: "Flushing that is NOT pruritic, watery diarrhea, wheezing/bronchospasm. Skin involvement is limited to flushing without urticaria. Diarrhea is prominent and persistent.",
+              annotation: "Suspect: Carcinoid / neuroendocrine tumor. Serotonin-mediated (and sometimes histamine). Treatable malignancy that can metastasize silently. A histamine-bucket approach would reduce symptoms while the tumor progresses. Needs 5-HIAA and chromogranin A. REFER.",
+              children: []
+            },
+            {
+              id: "red-tryptase",
+              type: "safety",
+              title: "Severe episodic reactions approaching anaphylaxis?",
+              body: "Client reports episodes involving hypotension, syncope (actual loss of consciousness), laryngeal tightness, cardiovascular collapse — events that have sent them to the ER or should have. Basal tryptase > 20 ng/mL if known. Urticaria pigmentosa (persistent brown macules). Unexplained osteoporosis or hepatosplenomegaly.",
+              annotation: "Suspect: Systemic mastocytosis with aggressive potential, or genuine severe MCAS requiring medical management. These clients need tryptase measurement, possible bone marrow biopsy, and should carry epinephrine. The severity threshold matters: true MCAS as described in the consensus literature involves near-emergency events. REFER for workup even while providing supportive care.",
+              children: []
+            },
+            {
+              id: "red-celiac",
+              type: "safety",
+              title: "Chronic GI symptoms + signs of malabsorption?",
+              body: "Unexplained weight loss, iron-deficiency anemia, osteopenia/osteoporosis (especially premature), chronic diarrhea or steatorrhea, dermatitis herpetiformis, family history of celiac or autoimmune disease. DAO deficiency may be secondary to villus atrophy.",
+              annotation: "Suspect: Celiac disease as a driver of secondary histamine issues. DAO is expressed at villus tips — celiac destroys exactly those cells. Treating HIT while ongoing gluten-mediated damage continues means treating the consequence while the cause perpetuates. Celiac also carries downstream autoimmune and malignancy risks. Recommend TTG-IgA screening (available via direct-to-consumer labs in many areas). If positive or strongly suspected, REFER for medical workup even if herbal/holistic care continues.",
+              children: []
+            },
+            {
+              id: "safety-passed",
+              type: "gate",
+              title: "No red flags identified → Proceed to assessment",
+              body: "If none of the above red flags are present, the presentation is likely within the terrain manageable by a clinical herbalist: some combination of complex atopy, histamine intolerance, gut-mediated histamine production, sensitization dynamics, hormonal modulation, and/or subclinical mast cell priming. Proceed to detailed assessment.",
+              children: []
+            }
+          ]
+        },
+        {
+          id: "initial-assessment",
+          type: "assessment",
+          title: "INITIAL ASSESSMENT: Characterize the symptom picture",
+          body: "The first branching question is about the temporal pattern and character of symptoms. This is the sharpest clinical separator between the major mechanistic categories.",
+          children: [
+            {
+              id: "temporal-pattern",
+              type: "question",
+              title: "What is the temporal pattern of symptoms?",
+              body: "Ask: 'Do you have distinct episodes that come and go with relatively clear onset and resolution? Or do you feel symptomatic most of the time, with flares of worsening on top of a chronic baseline?'",
+              children: [
+                {
+                  id: "episodic-clear",
+                  type: "branch",
+                  title: "EPISODIC: Discrete episodes with clear triggers and resolution",
+                  body: "Client describes identifiable episodes: exposure → reaction within minutes to hours → resolution over hours to a day. Between episodes, they feel relatively well. Triggers may include specific foods, environmental exposures, exercise, heat, medications.",
+                  annotation: "This pattern is more consistent with IgE-mediated atopy, genuine MC activation events, or pharmacological histamine intolerance. The episodic structure with clear triggers and resolution suggests a threshold-and-release or dose-dependent mechanism rather than sensitization.",
+                  children: [
+                    {
+                      id: "episodic-severity",
+                      type: "question",
+                      title: "How severe are the episodes?",
+                      body: "Distinguish between episodes that are uncomfortable (flushing, GI upset, hives, headache that resolves) vs. episodes that are frightening or dangerous (syncope, difficulty breathing, cardiovascular instability, ER visits).",
+                      children: [
+                        {
+                          id: "episodic-severe",
+                          type: "safety",
+                          title: "Episodes approaching anaphylaxis severity",
+                          body: "If episodes involve syncope, severe hypotension, laryngeal involvement, or have prompted ER visits — this is potentially genuine MCAS or severe atopy with anaphylaxis risk. Circle back to safety screen. Client needs tryptase capture during an event, should carry epinephrine, needs medical evaluation even while you provide supportive care.",
+                          children: []
+                        },
+                        {
+                          id: "episodic-moderate",
+                          type: "branch",
+                          title: "Episodes are unpleasant but not dangerous",
+                          body: "Flushing, urticaria, GI symptoms, headache, brain fog, nasal congestion — uncomfortable and sometimes disabling but no hemodynamic compromise (a.k.a. blood flow issues: acute hypotension, tachycardia).",
+                          children: [
+                            {
+                              id: "trigger-type",
+                              type: "question",
+                              title: "What triggers the episodes?",
+                              body: "Map the trigger landscape carefully. This is high-leverage assessment data.",
+                              children: [
+                                {
+                                  id: "trigger-food-specific",
+                                  type: "branch",
+                                  title: "Specific foods, especially high-histamine foods",
+                                  body: "Aged cheeses, fermented foods, wine/beer, cured meats, leftover proteins, canned fish, vinegar, sauerkraut, kombucha, soy sauce. Symptoms reliably follow ingestion within 30 min to 2 hours.",
+                                  annotation: "This is the classic dietary histamine intolerance pattern. The trigger list maps to histamine content, not allergic reaction.",
+                                  children: [
+                                    {
+                                      id: "hit-assessment",
+                                      type: "assessment",
+                                      title: "→ DIETARY HISTAMINE INTOLERANCE pathway",
+                                      body: "Primary suspicion: impaired histamine catabolism (DAO insufficiency), possibly compounded by gut dysbiosis producing endogenous histamine. Proceed to HIT driver assessment.",
+                                      children: [
+                                        {
+                                          id: "hit-drivers",
+                                          type: "question",
+                                          title: "Assess drivers of DAO insufficiency",
+                                          body: "Multiple factors can reduce DAO activity. Investigate each:",
+                                          children: [
+                                            {
+                                              id: "hit-alcohol",
+                                              type: "question",
+                                              title: "Does alcohol dramatically worsen symptoms?",
+                                              body: "Ethanol and acetaldehyde are direct DAO inhibitors. If alcohol reliably provokes or worsens reactions to histamine-containing foods, this confirms the DAO pathway is limiting clearance. Wine and beer (which also contain histamine) will be worst.",
+                                              annotation: "This is one of the most reliable clinical confirmations of the DAO mechanism. Alcohol doesn't just add histamine load — it actively suppresses the enzyme that clears it.",
+                                              children: [
+                                                {
+                                                  id: "hit-alcohol-yes",
+                                                  type: "intervention",
+                                                  title: "Alcohol dramatically worsens: confirms DAO limitation",
+                                                  body: "Strong signal for DAO-mediated HIT. Alcohol avoidance or significant reduction is a high-leverage intervention. Even modest alcohol use may be maintaining the intolerance.",
+                                                  children: []
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              id: "hit-meds",
+                                              type: "question",
+                                              title: "Any DAO-inhibiting medications?",
+                                              body: "Check for: NSAIDs (ibuprofen, aspirin — regular use), amitriptyline, isoniazid. These competitively inhibit DAO.",
+                                              annotation: "You can't prescribe alternatives, but you can identify the contribution and recommend the client discuss alternatives with their prescriber.",
+                                              children: []
+                                            },
+                                            {
+                                              id: "hit-gut-damage",
+                                              type: "question",
+                                              title: "History of gut mucosal injury?",
+                                              body: "Prior GI infections (post-infectious IBS), IBD, NSAID enteropathy, suspected celiac (circle back to safety screen if not already evaluated), history of chronic PPI use, frequent antibiotic courses. DAO is expressed at villus tips — the cells most vulnerable to mucosal damage.",
+                                              annotation: "If DAO deficiency is secondary to mucosal damage, the primary intervention is mucosal healing rather than indefinite DAO supplementation. This reframes the timeline: HIT may be reversible.",
+                                              children: [
+                                                {
+                                                  id: "hit-mucosal-healing",
+                                                  type: "intervention",
+                                                  title: "Mucosal healing protocol",
+                                                  body: "If mucosal damage is suspected as the driver of DAO insufficiency: gut-healing herbs (Glycyrrhiza, Althaea, Calendula, Plantago), L-glutamine, zinc carnosine, removal of ongoing irritants (NSAIDs, alcohol). Monitor for expanding food tolerance over weeks to months as a marker of mucosal recovery.",
+                                                  annotation: "The therapeutic trial is also diagnostic: if food tolerance expands as mucosal support proceeds, it confirms that DAO deficiency is secondary mucosal injury.",
+                                                  children: []
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              id: "hit-cofactors",
+                                              type: "intervention",
+                                              title: "Cofactor support for DAO function",
+                                              body: "DAO is a copper-containing amine oxidase requiring copper and vitamin C (with some evidence for B6 as a broader cofactor). Ensure adequacy — not megadosing, but sufficiency. Copper is rarely deficient but worth checking diet/supplementation patterns (excess zinc can deplete copper). Vitamin C is a reasonable low-risk intervention.",
+                                              annotation: "Note: DAO is NOT riboflavin-dependent (that's MAO). The copper cofactor is the mechanistically correct target.",
+                                              children: []
+                                            },
+                                            {
+                                              id: "hit-dao-supplement",
+                                              type: "intervention",
+                                              title: "DAO supplementation trial",
+                                              body: "Exogenous DAO (porcine kidney-derived, e.g. Pure Encapsulations DAO, DAOSiN) taken 15-20 min before meals containing histamine. Immediate stopgap for DAO deficiency — adds enzyme capacity exactly when needed.",
+                                              annotation: "Useful as a therapeutic trial: clear improvement with pre-meal DAO confirms the DAO-mediated mechanism and distinguishes it from MC-mediated or sensitization-driven food reactivity. If DAO supplementation produces reliable benefit with histamine-containing foods, you have strong evidence for the HIT pathway.",
+                                              children: []
+                                            },
+                                            {
+                                              id: "hit-sibo-check",
+                                              type: "question",
+                                              title: "Signs of SIBO / dysbiosis as endogenous histamine source?",
+                                              body: "Bloating (especially postprandial), gas, irregular bowel patterns, symptoms that don't fully resolve with low-histamine diet alone. SIBO-associated bacteria (Morganella, Klebsiella, some Lactobacillus strains) produce histamine endogenously from dietary histidine — independent of preformed histamine in food.",
+                                              annotation: "If a low-histamine diet helps but doesn't fully resolve symptoms, endogenous gut histamine production is a strong suspect. The gut is producing its own histamine load that dietary restriction can't fully address.",
+                                              children: [
+                                                {
+                                                  id: "hit-sibo-branch",
+                                                  type: "branch",
+                                                  title: "→ Cross-reference with GUT pathway",
+                                                  body: "If SIBO/dysbiosis is suspected, integrate with the gut-directed assessment branch. Antimicrobial herbs (Berberis spp., Allium sativum, Origanum vulgare essential oil), prokinetics for MMC support (Zingiber, Iberogast-type formulas), and careful probiotic selection (avoid histamine-producing strains like L. reuteri, favor DAO-supporting strains like B. infantis, L. rhamnosus GG).",
+                                                  children: []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          id: "hit-trial",
+                                          type: "intervention",
+                                          title: "THERAPEUTIC TRIAL: Low-histamine diet + DAO",
+                                          body: "2-4 week strict low-histamine elimination, with DAO supplementation before meals. Track symptoms daily. Also eliminate alcohol completely during the trial.",
+                                          annotation: "INTERPRETING RESULTS: (1) Dramatic improvement → confirms dietary histamine is the primary driver; proceed to identify and address underlying DAO-reducing factors. (2) Partial improvement → dietary histamine is a contributor but not the whole picture; assess for endogenous gut sources, sensitization overlay, or atopic component. (3) Minimal improvement → dietary histamine is not the primary mechanism; reassess toward sensitization or atopic pathways.",
+                                          children: [
+                                            {
+                                              id: "hit-trial-full",
+                                              type: "outcome",
+                                              title: "Full resolution → Dietary HIT confirmed",
+                                              body: "Primary mechanism is impaired histamine breakdown. Long-term strategy: address underlying DAO-reducing factors (mucosal healing, alcohol reduction, cofactors), use DAO supplementation as bridge, and gradually reintroduce foods to establish individual tolerance thresholds. Goal is expanding tolerance, not permanent restriction.",
+                                              children: []
+                                            },
+                                            {
+                                              id: "hit-trial-partial",
+                                              type: "outcome",
+                                              title: "Partial improvement → Mixed picture",
+                                              body: "Dietary histamine is a real contributor but not the whole story. Likely co-drivers: endogenous gut histamine production (→ assess SIBO/dysbiosis), atopic component generating MC-derived histamine independent of diet, sensitization overlay amplifying the response to residual histamine load, or hormonal modulation (→ assess menstrual cycle correlation).",
+                                              annotation: "This is the most common outcome in practice and the most clinically important to handle well. It confirms something real without fully resolving the picture. Proceed to assess the other contributing mechanisms.",
+                                              children: []
+                                            },
+                                            {
+                                              id: "hit-trial-minimal",
+                                              type: "outcome",
+                                              title: "Minimal improvement → HIT not the primary driver",
+                                              body: "Dietary histamine is not the rate-limiting factor. Reassess: Is this an atopic picture with non-histamine triggers? A sensitization picture where avoidance doesn't change the central gain? A hormonal or autonomic picture that dietary change can't address? Proceed to other assessment branches.",
+                                              children: []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  id: "trigger-food-broad",
+                                  type: "branch",
+                                  title: "Broad food reactivity that doesn't map to histamine content",
+                                  body: "Reactions to foods that are NOT high in histamine: fresh fruits, vegetables, wheat, dairy, eggs, nuts, various proteins. The trigger list doesn't follow histamine content — it follows IgE allergenicity OR seems almost random / expanding. New intolerances keep appearing.",
+                                  children: [
+                                    {
+                                      id: "broad-atopic-check",
+                                      type: "question",
+                                      title: "Personal or family history of atopy?",
+                                      body: "Eczema, asthma, allergic rhinitis, known allergies (food, environmental, drug, venom)? Childhood atopic history? Family members with atopic disease?",
+                                      children: [
+                                        {
+                                          id: "broad-atopic-yes",
+                                          type: "branch",
+                                          title: "Atopic history present → COMPLEX ATOPY pathway",
+                                          body: "This person likely has polysensitized IgE-mediated atopic disease with multisystem expression. Their 'histamine issues' are likely mast cells degranulating or hypersensitized in response to genuine IgE-mediated triggers, not impaired histamine catabolism.",
+                                          annotation: "Complex atopy can look like MCAS: multisystem reactivity, food triggers, flushing, GI symptoms, brain fog from inflammatory mediators. The mechanism is IgE-mediated MC activation — mast cells are genuinely involved, but driven by adaptive immune sensitization to specific antigens, not primary MC pathology.",
+                                          children: [
+                                            {
+                                              id: "atopy-assessment",
+                                              type: "assessment",
+                                              title: "Assess the scope of atopic involvement",
+                                              body: "Map all systems involved: skin (eczema, urticaria, angioedema), respiratory (asthma, rhinitis, congestion), GI (cramping, diarrhea, nausea after specific foods), cardiovascular (flushing, tachycardia), neurological (brain fog, headache — cytokine-mediated).",
+                                              children: [
+                                                {
+                                                  id: "atopy-why-multi",
+                                                  type: "info",
+                                                  title: "Why atopy goes multisystem",
+                                                  body: "Atopic disease is taught as organ-specific (eczema = skin, asthma = airway) but this is a teaching artifact. Polysensitized atopy involves: (1) IgE-sensitized mast cells throughout ALL mucosal and connective tissues, not just one organ; (2) Th2-skewed systemic immune polarization driving chronic low-grade inflammation; (3) autonomic consequences — histamine directly modulates heart rate and vascular tone; (4) CNS effects from circulating cytokines crossing or signaling through the BBB; (5) gut barrier disruption from intestinal MC activation allowing further antigen exposure, creating new sensitizations. The expanding food intolerance list is a real immunological phenomenon, not hypochondria.",
+                                                  children: []
+                                                },
+                                                {
+                                                  id: "atopy-interventions",
+                                                  type: "intervention",
+                                                  title: "Atopy-directed intervention strategy",
+                                                  body: "Different priorities than HIT: the goal is reducing IgE-mediated reactivity and Th2 polarization, not just lowering histamine load.",
+                                                  children: [
+                                                    {
+                                                      id: "atopy-trigger-id",
+                                                      type: "intervention",
+                                                      title: "Trigger identification and management",
+                                                      body: "Systematic food-symptom tracking with attention to IgE-pattern timing (rapid onset, minutes to 2 hours) and cross-reactivity patterns (oral allergy syndrome with pollens). Environmental allergen assessment: dust mites, mold, pet dander, pollen seasons. Recommend allergy testing via prescriber if not done — skin prick or specific IgE panels. For identified triggers: avoidance is appropriate here (unlike sensitization, where avoidance maintains the problem).",
+                                                      annotation: "Important distinction: in atopy, avoidance of identified allergens is appropriate and protective. In sensitization, progressive avoidance deepens the problem. Getting this distinction right matters for whether you recommend expanding or restricting.",
+                                                      children: []
+                                                    },
+                                                    {
+                                                      id: "atopy-immune-modulation",
+                                                      type: "intervention",
+                                                      title: "Immune modulation: Th2 → Th1/Treg rebalancing",
+                                                      body: "Herbal immunomodulators with evidence for shifting Th2 polarization: Astragalus membranaceus (Th1 support), medicinal mushrooms (Ganoderma, Trametes — beta-glucan-mediated immune training), Nigella sativa (thymoquinone — reduces IgE, shifts Th1/Th2 balance). Vitamin D optimization (Th2-dampening). Omega-3 fatty acids (resolvin precursors). Gut-directed work to reduce antigen translocation driving new sensitizations.",
+                                                      children: []
+                                                    },
+                                                    {
+                                                      id: "atopy-mc-stabilize",
+                                                      type: "intervention",
+                                                      title: "MC stabilization is appropriate here",
+                                                      body: "Quercetin, luteolin, vitamin C, and OTC H1 antihistamines (cetirizine, loratadine) are genuinely helpful for atopic MC degranulation. These reduce mediator release and downstream symptoms. The MCAS protocol overlaps with appropriate atopy management here — but the framing difference matters: you're managing atopic disease, not primary MC pathology.",
+                                                      children: []
+                                                    },
+                                                    {
+                                                      id: "atopy-epinephrine",
+                                                      type: "safety",
+                                                      title: "Anaphylaxis risk assessment",
+                                                      body: "If the client has IgE-mediated food allergy with any history of systemic reactions (throat tightness, difficulty breathing, significant cardiovascular symptoms, multi-organ involvement from a single food), they should carry epinephrine and have an anaphylaxis action plan. This may be UNDER-managed in the MCAS-adjacent population who are treating anaphylaxis risk with antihistamines and quercetin.",
+                                                      annotation: "This is one of the most important practical consequences of misframing atopy as MCAS: the client may not be carrying epinephrine when they should be.",
+                                                      children: []
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          id: "broad-no-atopy",
+                                          type: "branch",
+                                          title: "No significant atopic history → Assess for sensitization",
+                                          body: "Broad food reactivity without atopic substrate, especially if intolerances are expanding over time and don't follow IgE patterns (delayed onset, variable reactions to the same food, reactions that seem context-dependent).",
+                                          annotation: "Expanding reactivity without immunological substrate strongly suggests central and/or peripheral sensitization driving the picture. The nervous system is amplifying signals, not the immune system generating them.",
+                                          children: [
+                                            {
+                                              id: "sensitization-redirect",
+                                              type: "gate",
+                                              title: "→ Proceed to SENSITIZATION pathway",
+                                              body: "This presentation is better assessed through the chronic/diffuse symptom branch (sensitization dynamics). The food reactivity is likely one expression of a broader sensitization picture.",
+                                              children: []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  id: "trigger-environmental",
+                                  type: "branch",
+                                  title: "Environmental triggers: chemicals, fragrances, temperature, exercise",
+                                  body: "Reactions to perfumes, cleaning products, smoke, paint, temperature changes, exercise, stress — triggers that are not dietary. May include multiple chemical sensitivity (MCS).",
+                                  children: [
+                                    {
+                                      id: "env-check-atopy",
+                                      type: "question",
+                                      title: "Any identified environmental allergies?",
+                                      body: "Dust mite, mold, animal dander, pollen — standard aeroallergens. If present with known sensitizations, this may be underappreciated complex atopy with environmental triggers. If the triggers are NON-allergenic substances (chemicals, fragrances, temperature), this points more toward sensitization.",
+                                      children: [
+                                        {
+                                          id: "env-mcs-pattern",
+                                          type: "branch",
+                                          title: "Chemical/fragrance sensitivity pattern → SENSITIZATION",
+                                          body: "Reactivity to chemically diverse substances at concentrations well below toxicity thresholds, with symptoms that are multisystem and variable — this is the multiple chemical sensitivity (MCS) pattern. Strongly associated with central sensitization. The nervous system is treating chemical stimuli as threats at the detection level.",
+                                          annotation: "MCS is one of the clearest phenotypic markers for central sensitization. If present alongside 'histamine issues,' it significantly increases the probability that sensitization is a dominant driver over MC pathology or HIT.",
+                                          children: [
+                                            {
+                                              id: "mcs-sensitization-redirect",
+                                              type: "gate",
+                                              title: "→ Proceed to SENSITIZATION pathway",
+                                              body: "Chemical sensitivity patterns are best addressed through the sensitization framework. Peripheral MC-stabilizing interventions may provide partial relief (MCs at nerve terminals do participate in the response), but the primary intervention is nervous system regulation.",
+                                              children: []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  id: "chronic-diffuse",
+                  type: "branch",
+                  title: "CHRONIC/DIFFUSE: Symptomatic most of the time, with flares",
+                  body: "Client describes a baseline of ongoing symptoms — never fully well. Fatigue, brain fog, diffuse pain, GI dysfunction, reactive skin — present to some degree continuously, with flares of worsening that may or may not have identifiable triggers. 'Always in the bucket' or 'always close to overflowing.'",
+                  annotation: "This temporal pattern is the sharpest clinical separator. True MCAS is episodic with return to baseline. A chronic, non-episodic diffuse symptom picture suggests: central/peripheral sensitization, chronic inflammatory dysregulation, autonomic dysfunction, or chronic histamine excess from continuous endogenous production (SIBO) — not primary episodic MC degranulation.",
+                  children: [
+                    {
+                      id: "chronic-assess-systems",
+                      type: "assessment",
+                      title: "Map the chronic symptom burden",
+                      body: "Systematically assess which systems are involved and how they relate to each other:",
+                      children: [
+                        {
+                          id: "chronic-neuro",
+                          type: "question",
+                          title: "Nervous system symptoms?",
+                          body: "Brain fog, fatigue (especially non-restorative sleep), headaches, light/sound sensitivity, difficulty concentrating, sensory overwhelm, pain amplification (things hurt more than they should), temperature dysregulation, poor stress tolerance.",
+                          children: [
+                            {
+                              id: "neuro-prominent",
+                              type: "branch",
+                              title: "Nervous system symptoms are prominent → Strong sensitization signal",
+                              body: "When CNS and ANS symptoms lead the picture — especially sensory amplification, brain fog, fatigue, and poor stress tolerance — sensitization dynamics are very likely a dominant driver.",
+                              children: [
+                                {
+                                  id: "sensitization-full",
+                                  type: "assessment",
+                                  title: "SENSITIZATION ASSESSMENT",
+                                  body: "Central and peripheral sensitization involves lowered activation thresholds and increased gain across sensory and interoceptive processing. It produces multisystem symptoms that are physiologically real but driven by nervous system amplification rather than peripheral pathology at the primary site.",
+                                  children: [
+                                    {
+                                      id: "sens-markers",
+                                      type: "question",
+                                      title: "Assess sensitization markers",
+                                      body: "These features increase confidence that sensitization is a dominant driver:",
+                                      children: [
+                                        {
+                                          id: "sens-allodynia",
+                                          type: "question",
+                                          title: "Allodynia or hyperalgesia?",
+                                          body: "Pain from stimuli that shouldn't be painful (clothing tags, light pressure, normal temperatures) or exaggerated pain from mildly painful stimuli. This is the hallmark of altered nociceptive processing.",
+                                          annotation: "In MCAS or atopic allergy, skin symptoms are typically urticarial (hives) or angioedematous (swelling) — mediated by vasodilation and plasma extravasation. In sensitization, skin complaints are more often sensory: burning, stinging, hypersensitivity to touch or temperature, without visible skin changes or with only diffuse flushing.",
+                                          children: []
+                                        },
+                                        {
+                                          id: "sens-visceral",
+                                          type: "question",
+                                          title: "Visceral hypersensitivity?",
+                                          body: "GI symptoms (bloating, nausea, cramping) that seem disproportionate to what's been eaten, or that occur even on a highly restricted diet. Bladder urgency/frequency without infection. Pelvic pain. The organs are 'too sensitive' to normal stimuli.",
+                                          annotation: "Bloating and nausea without acid symptoms (no heartburn, no reflux) — especially if proportionate to the feeling of 'fullness' rather than to actual gas production — suggests visceral hypersensitivity amplifying normal enteric signaling. This population often doesn't respond well to H2 blockers because the mechanism isn't acid-mediated.",
+                                          children: []
+                                        },
+                                        {
+                                          id: "sens-context",
+                                          type: "question",
+                                          title: "Context-dependent symptom variability?",
+                                          body: "Do symptoms worsen with stress, poor sleep, emotional distress, or social conflict? Do they improve on vacation, in safe environments, or with relaxation? Can the client eat something on a calm day that provokes a reaction on a stressful day?",
+                                          annotation: "Context-dependence is the strongest distinguishing signal from HIT or atopy, where the trigger-response relationship is primarily dose-dependent and biochemically fixed. In sensitization, the same exposure produces variable responses depending on nervous system state. The 'bucket' isn't filling with histamine — the nervous system's activation threshold is fluctuating with allostatic load.",
+                                          children: []
+                                        },
+                                        {
+                                          id: "sens-comorbid",
+                                          type: "question",
+                                          title: "Comorbid sensitization-spectrum conditions?",
+                                          body: "Fibromyalgia, IBS, chronic fatigue, migraine, TMJ, interstitial cystitis, chronic pelvic pain, MCS, POTS. Overlap with these conditions increases confidence in sensitization as a dominant mechanism.",
+                                          children: []
+                                        },
+                                        {
+                                          id: "sens-hx",
+                                          type: "question",
+                                          title: "Precipitating history?",
+                                          body: "Was there an identifiable onset event? Infection (especially post-COVID, post-EBV), physical trauma, surgery, prolonged stress, significant life disruption, adverse childhood experiences? Sensitization often follows an initiating insult that the nervous system didn't fully resolve.",
+                                          children: []
+                                        },
+                                        {
+                                          id: "sens-neurodivergent",
+                                          type: "question",
+                                          title: "Neurodivergent? Hypermobile?",
+                                          body: "ADHD, autism, or other neurodivergence. Joint hypermobility / EDS spectrum. Both are predisposing substrates for sensitization: neurodivergent nervous systems run elevated baseline processing demands (predictive processing resource competition), and hypermobile connective tissue produces chronic low-grade peripheral afferent signaling that maintains central gain.",
+                                          annotation: "The EDS/POTS/MCAS trifecta as a community-embedded cluster is a real pattern even if the MCAS label is misleading. Hypermobility + dysautonomia + neurodivergence + sensitization is its own coherent phenotype.",
+                                          children: []
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      id: "sens-interventions",
+                                      type: "intervention",
+                                      title: "SENSITIZATION intervention strategy",
+                                      body: "The therapeutic logic for sensitization-dominant pictures is fundamentally different from HIT or atopy: the goal is nervous system downregulation and eventual threshold-raising, not avoidance and load reduction.",
+                                      children: [
+                                        {
+                                          id: "sens-ns-regulation",
+                                          type: "intervention",
+                                          title: "PRIORITY: Nervous system regulation",
+                                          body: "This is the primary intervention, not an adjunct. HPA axis support (adaptogens: Withania are others chosen to match the person), vagal tone support (Scutellaria lateriflora, Verbena, Passiflora), sleep architecture restoration (this is not really negotiable — sensitization cannot resolve without adequate sleep). Somatic practices: breathwork, gentle movement. Consider referral to somatic experiencing, EMDR, or other trauma-processing modalities if history warrants.",
+                                          annotation: "The adaptogens and nervines here are not just 'nice to have' — they are the core of the protocol. In a sensitization-dominant picture, nervine tonics and HPA regulators are doing more work than quercetin.",
+                                          children: []
+                                        },
+                                        {
+                                          id: "sens-peripheral-loop",
+                                          type: "intervention",
+                                          title: "Peripheral loop interruption (complementary, not primary)",
+                                          body: "MC-stabilizing herbs (quercetin, luteolin) and anti-inflammatory support have genuine rationale here: they reduce peripheral histamine activity that keeps the nerves primed to fire. Topical anti-inflammatory approaches for skin involvement. Gut support reduces alarm signals to the brain. These interventions have a ceiling — they can quiet peripheral input but can't resolve the central amplification.",
+                                          annotation: "This is the honest mechanistic home for quercetin and MC-stabilizing herbs in the sensitization population: not treating MCAS, but interrupting the nervous system loop that maintains sensitization. A more modest claim but a defensible one.",
+                                          children: []
+                                        },
+                                        {
+                                          id: "sens-diet-approach",
+                                          type: "intervention",
+                                          title: "CRITICAL: Diet approach differs from HIT",
+                                          body: "In sensitization, ongoing dietary restriction MAINTAINS the problem by deepening avoidance patterns and confirming the nervous system's threat predictions. Short-term simplification (2-4 weeks) may reduce inflammatory load enough to create space for nervous system work, but the medium-term goal should be EXPANDING tolerance, not tightening restriction. If the client has been restricting for months or years with an ever-shrinking list of 'safe' foods, this pattern is itself part of the problem.",
+                                          annotation: "This is where the 'bucket' metaphor does active harm in the sensitization population: it frames the goal as keeping the bucket empty (avoidance) rather than making the bucket bigger (tolerance building). The bucket metaphor in this context suggests permanent limitation. A more appropriate metaphor is a recalibrating smoke detector — the goal is reducing the detector's sensitivity, not eliminating all possible triggers.",
+                                          children: [
+                                            {
+                                              id: "sens-diet-reintro",
+                                              type: "intervention",
+                                              title: "Graduated reintroduction protocol",
+                                              body: "Once nervous system regulation is underway and the client has some capacity for calm: systematic, slow reintroduction of eliminated foods, starting with lowest-anxiety items. In a low-arousal context (calm day, rested, safe environment). Track responses with awareness that context-dependent variability is expected. A reaction on a stressful day doesn't necessarily mean the food itself is a trigger — it may mean the nervous system's threshold was already low.",
+                                              children: []
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          id: "sens-illness-model",
+                                          type: "intervention",
+                                          title: "Gentle reframing of the illness model",
+                                          body: "If the MCAS/histamine framing is driving escalating restriction, medical anxiety, or community-reinforced hypervigilance to bodily sensations, the illness model itself may be maintaining sensitization (predictive processing: the brain generates symptoms matching its predictions). The reframe is NOT 'it's all in your head' — it's 'your nervous system has learned to amplify signals in ways that produce real symptoms, and we can work on changing that.'",
+                                          annotation: "Use the severity gap as a gentle entry: 'The people who originally defined MCAS were describing something quite alarming — ER visits, fainting, epinephrine. What you're describing sounds real and disabling but different in character. That difference might be important information about what's driving it.' This opens the door without dismissing the experience.",
+                                          children: []
+                                        },
+                                        {
+                                          id: "sens-trajectory",
+                                          type: "outcome",
+                                          title: "Track trajectory, not snapshots",
+                                          body: "Success markers: food tolerance expanding rather than contracting. Sleep improving. Reactions becoming less severe and shorter-lived. Ability to tolerate more environmental variation. Stress resilience increasing. These trajectory markers matter more than any single symptom measure and cut across all the mechanistic possibilities.",
+                                          children: []
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          id: "chronic-gi",
+                          type: "question",
+                          title: "GI symptoms dominant?",
+                          body: "Bloating, irregular motility (constipation, diarrhea, or alternating), postprandial distress, gas, nausea — even on restricted diets. GI symptoms lead the picture rather than skin or neurological symptoms.",
+                          children: [
+                            {
+                              id: "gi-dominant",
+                              type: "branch",
+                              title: "GI-dominant picture → GUT AS CENTRAL NODE",
+                              body: "The gut is where the highest MC density sits, where histamine production and clearance both happen, where enteric nervous system sensitization feeds the central picture, and where barrier function determines systemic antigen load. GI-dominant presentations warrant gut-directed assessment regardless of which mechanism is primary.",
+                              children: [
+                                {
+                                  id: "gut-assessment",
+                                  type: "assessment",
+                                  title: "Gut-directed assessment",
+                                  body: "Multiple mechanisms can produce the GI-dominant picture. Distinguish between them:",
+                                  children: [
+                                    {
+                                      id: "gut-sibo",
+                                      type: "question",
+                                      title: "SIBO pattern?",
+                                      body: "Bloating within 30-90 min of eating (especially carbohydrates), excessive gas/belching, symptoms improve with fasting or very simple eating, history of prior food poisoning or antibiotic courses, symptoms that migrated from post-infectious GI illness to broader 'histamine intolerance' over time.",
+                                      annotation: "SIBO both produces endogenous histamine (via bacterial histidine decarboxylase) and damages the mucosa that produces DAO. It's a double hit: increasing histamine load while reducing clearance capacity. If a low-histamine diet helps but doesn't resolve, SIBO is a strong suspect for the residual.",
+                                      children: [
+                                        {
+                                          id: "gut-sibo-tx",
+                                          type: "intervention",
+                                          title: "SIBO/dysbiosis-directed intervention",
+                                          body: "Antimicrobial herbs: Berberis-containing plants (Berberis vulgaris, Mahonia aquifolium, Coptis chinensis), Allium sativum (allicin), oregano oil (Origanum vulgare — use cautiously, short-term). Prokinetics for MMC support: Zingiber officinale, Iberogast-type combination (Iberis amara, Matricaria, Melissa, Mentha, etc.). Meal spacing to allow MMC cycling (avoid constant grazing). Probiotic selection matters: AVOID histamine-producing strains (L. casei, L. reuteri, L. bulgaricus). FAVOR: B. infantis, B. longum, L. rhamnosus GG, L. plantarum.",
+                                          children: [
+                                            {
+                                              id: "gut-sibo-trial",
+                                              type: "intervention",
+                                              title: "THERAPEUTIC TRIAL: Antimicrobial + prokinetic protocol",
+                                              body: "4-6 week antimicrobial protocol with concurrent prokinetic support, followed by reassessment. If GI symptoms improve AND overall 'histamine' symptoms decrease proportionally, this confirms the gut as a primary source of histamine load. If GI improves but systemic symptoms persist, the gut was a contributor but other mechanisms are also active.",
+                                              children: []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      id: "gut-permeability",
+                                      type: "question",
+                                      title: "Gut barrier disruption pattern?",
+                                      body: "Broad food reactivity that followed a GI insult (infection, antibiotic course, NSAID use, stress period). Reactivity to diverse foods that don't share allergen or histamine profiles. Signs of systemic inflammatory load (fatigue, brain fog, joint pain) that correlate with eating generally rather than specific foods.",
+                                      annotation: "Increased permeability exposes subepithelial mast cells to luminal contents — histamine, food antigens, microbial products — that normally wouldn't reach them. This creates a pattern that looks like 'reacting to everything' because the problem isn't the food but the barrier. It also drives new IgE sensitizations as the immune system encounters food antigens in the gut wall.",
+                                      children: [
+                                        {
+                                          id: "gut-barrier-tx",
+                                          type: "intervention",
+                                          title: "Gut barrier support",
+                                          body: "Mucosal healing herbs: Glycyrrhiza glabra (DGL if hypertension is a concern), Althaea, Calendula, Plantago. L-glutamine (fuel for enterocytes). Zinc carnosine. Remove barrier-disrupting factors: NSAIDs, alcohol, identified food allergens. Short-chain fatty acid support via soluble fiber (if tolerated) and resistant starch.",
+                                          children: []
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      id: "gut-ens-sensitization",
+                                      type: "question",
+                                      title: "Enteric nervous system sensitization pattern?",
+                                      body: "GI symptoms that seem disproportionate to any identifiable trigger. Bloating from normal-volume meals. Nausea without acid reflux. Pain or discomfort from normal peristalsis. Symptoms that are worse with stress, anxiety, or poor sleep. Post-infectious IBS history. The gut feels 'too sensitive' to normal stimuli.",
+                                      annotation: "The enteric nervous system has its own sensitization dynamics semi-autonomous from the CNS. Sensitized enteric neurons fire at lower thresholds, activating mucosal mast cells and altering motility — producing real GI symptoms driven by neural amplification rather than food content.",
+                                      children: [
+                                        {
+                                          id: "gut-ens-tx",
+                                          type: "intervention",
+                                          title: "Enteric nervous system regulation",
+                                          body: "Carminatives and antispasmodics: Mentha × piperita (peppermint — including enteric-coated capsules for IBS), Matricaria recutita, Foeniculum vulgare, Zingiber officinale. Vagal tone support (overlaps with central NS regulation): Melissa officinalis (cholinergic via rosmarinic acid). Visceral-directed relaxation techniques (Nerva app). Address sleep disruption as a priority — enteric sensitization worsens with sleep deprivation.",
+                                          annotation: "Note: H2 blockers (famotidine) are NOT well-matched to this picture. Bloating, constipation, and nausea without acid symptoms are not H2-mediated. Don't recommend famotidine just because it's on the MCAS protocol list.",
+                                          children: []
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          id: "chronic-autonomic",
+                          type: "question",
+                          title: "Autonomic symptoms prominent?",
+                          body: "Flushing, tachycardia (especially positional — worse on standing), temperature dysregulation, exercise intolerance, blood pressure instability, lightheadedness, pre-syncope.",
+                          children: [
+                            {
+                              id: "pots-check",
+                              type: "branch",
+                              title: "POTS / dysautonomia assessment",
+                              body: "Postural orthostatic tachycardia syndrome (POTS) produces flushing, tachycardia, GI dysmotility, near-syncope, exercise intolerance, and cognitive fog — all of which appear on the MCAS symptom list. CRH directly degranulates mast cells, and sympathetic activation lowers MC activation thresholds — so dysautonomia can drive genuine secondary MC reactivity.",
+                              annotation: "Simple screening: have the client check heart rate lying down and then standing still for 10 minutes. An increase of ≥30 bpm (or HR ≥120 standing) suggests POTS. This doesn't require a tilt table — just a pulse oximeter and patience.",
+                              children: [
+                                {
+                                  id: "pots-positive",
+                                  type: "branch",
+                                  title: "POTS pattern identified",
+                                  body: "If POTS is primary, the MC reactivity is secondary to autonomic dysregulation. The primary interventions are different: volume loading (salt and fluids), compression garments, graded exercise reconditioning, postural conditioning. Referral for formal evaluation is warranted.",
+                                  children: [
+                                    {
+                                      id: "pots-herbal",
+                                      type: "intervention",
+                                      title: "Herbal/nutritional support for POTS",
+                                      body: "While awaiting or alongside medical evaluation: electrolyte support (sodium loading, not just water), Crataegus (cardiovascular tonic — rate and rhythm regulation), nervine tonics for autonomic regulation, sleep support. The MC-stabilizing protocol can continue as it does address the secondary MC reactivity, but the primary target should be the autonomic dysfunction.",
+                                      children: []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          id: "chronic-hormonal",
+                          type: "question",
+                          title: "Hormonal correlation?",
+                          body: "For people with menstrual cycles: do symptoms worsen perimenstrually (around menses) or during the luteal phase? Did symptoms start or dramatically worsen in perimenopause? Is there a clear cyclical pattern?",
+                          children: [
+                            {
+                              id: "hormonal-branch",
+                              type: "branch",
+                              title: "HORMONAL MODULATION pathway",
+                              body: "Estrogen primes and sensitizes mast cells — upregulating IgE receptors, promoting MC proliferation, and lowering activation thresholds. Progesterone partially counterbalances this during the luteal phase. The late-luteal co-withdrawal of both hormones removes the progesterone brake from a maximally primed MC population; perimenopause extends this destabilization as the hormonal architecture erodes progressively. Estrogen withdrawal additionally disrupts sleep, increases HPA reactivity, and reduces serotonergic descending inhibition — creating a near-perfect storm for MCAS-appearing sensitization in a vulnerable substrate.",
+                              annotation: "Hormonal modulation is rarely the sole driver but can be the precipitant that tips other mechanisms into symptomatic territory. Address it as a modifying factor alongside whichever primary mechanism is identified.",
+                              children: [
+                                {
+                                  id: "hormonal-interventions",
+                                  type: "intervention",
+                                  title: "Hormonal modulation support",
+                                  body: "Herbal and other hormonal support. Vitex agnus-castus for luteal phase support (progesterone modulation). Sleep support is especially critical in perimenopause (thermoregulatory instability disrupts architecture). HPA support (perimenopause increases HPA reactivity). Track symptoms against menstrual cycle to establish the correlation pattern — this is diagnostic information. If hormonal timing is the dominant modulator, symptoms should be substantially worse in predictable cycle phases.",
+                                  children: []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  id: "mixed-pattern",
+                  type: "branch",
+                  title: "MIXED: Both episodic reactions AND chronic baseline",
+                  body: "Many clients will describe both: a chronic baseline of symptoms plus discrete flares triggered by specific exposures. This is perhaps the most common presentation and doesn't fit neatly into one pathway.",
+                  annotation: "Mixed presentations typically involve multiple overlapping mechanisms — e.g., DAO-mediated HIT producing acute reactions layered on top of sensitization-driven chronic baseline, or atopic triggers superimposed on autonomic dysregulation. The assessment task is to determine which mechanism is dominant and which are modulators.",
+                  children: [
+                    {
+                      id: "mixed-strategy",
+                      type: "assessment",
+                      title: "Mixed presentation strategy",
+                      body: "For mixed pictures: Using this tool, (1) Address the acute episodic component first — it's usually easier to characterize (specific triggers → specific mechanisms) and provides early wins. (2) Then assess what remains once the episodic component is managed — the residual chronic baseline reveals the underlying mechanism more clearly. (3) Use therapeutic trials to separate mechanisms: if DAO + low-histamine diet resolves the episodic component but the chronic baseline persists, the baseline may not be histamine-mediated.",
+                      children: [
+                        {
+                          id: "mixed-sequence",
+                          type: "intervention",
+                          title: "A sequenced intervention approach",
+                          body: "Phase 1 (weeks 1-4): Low-histamine diet + DAO supplementation + basic anti-inflammatory support. This addresses the HIT component and reduces overall load. Phase 2 (weeks 4-8): Assess what remains. If significant chronic symptoms persist, layer in gut-directed work (if GI-dominant) or NS regulation (if neuro-dominant). Phase 3 (weeks 8-16): Introduce tolerance-building approaches if sensitization dynamics are present. Begin gradual dietary reintroduction while maintaining NS support. Throughout: Track what improves when and in response to what — the pattern of response is the diagnostic information.",
+                          children: []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "convergent-protocol",
+      type: "outcome",
+      title: "WHAT ALWAYS HELPS: Interventions that help across mechanisms",
+      body: "Regardless of primary mechanism, these domains overlap heavily across HIT, atopy, sensitization, and gut-mediated pictures. They can be initiated early while the assessment is ongoing.",
+      children: [
+        {
+          id: "converge-gut",
+          type: "intervention",
+          title: "Gut support (universal)",
+          body: "Mucosal integrity support, barrier function, microbiome modulation. The gut is the site of highest MC density, where histamine production and clearance both happen, where enteric sensitization feeds the central picture, and where barrier function determines systemic load. Justified from almost every mechanistic angle simultaneously.",
+          children: []
+        },
+        {
+          id: "converge-ns",
+          type: "intervention",
+          title: "Nervous system regulation (universal)",
+          body: "Sleep, vagal tone, HPA support, allostatic load reduction. Primary in sensitization, important modifier in atopy and HIT, relevant in all presentations because CRH-driven MC activation means autonomic dysregulation perpetuates MC reactivity regardless of primary mechanism.",
+          children: []
+        },
+        {
+          id: "converge-mc",
+          type: "intervention",
+          title: "MC-stabilizing / anti-mediator (universal, low risk)",
+          body: "Quercetin, vitamin C, luteolin, DAO support. Low enough risk profiles that they're reasonable to deploy while the picture is being clarified. The therapeutic trial itself becomes diagnostic: what responds, how quickly, whether it plateaus.",
+          children: []
+        },
+        {
+          id: "converge-antihistamine",
+          type: "intervention",
+          title: "OTC antihistamine trial (diagnostic & therapeutic)",
+          body: "H1 blocker (cetirizine, loratadine, fexofenadine). If significant improvement → confirms histamine-mediated symptom component. H2 blocker (famotidine) ONLY if acid symptoms are present (heartburn, reflux, upper GI discomfort). Don't add famotidine for bloating, constipation, or lower GI symptoms — those are not H2-receptor-mediated.",
+          children: []
+        },
+        {
+          id: "converge-tracking",
+          type: "intervention",
+          title: "Tracking: trajectory over snapshots",
+          body: "Watch for: expanding vs. contracting food tolerance, sleep quality trends, reaction severity and recovery time, stress resilience, ability to tolerate environmental variation. These trajectory markers cut across all mechanistic possibilities and are more informative than any single symptom measure.",
+          annotation: "The direction of change matters more than the current state. A client whose tolerance is expanding — even slowly — is on a recovery trajectory regardless of which label applies. A client whose restrictions are tightening despite following the protocol is in a maintenance pattern that may need a different approach.",
+          children: []
+        }
+      ]
+    }
+  ]
+};
+
+    // ─── TYPE COLORS & STYLING ──────────────────────────────────────────────────
+
+    const TYPE_CONFIG = {
+      entry:        { bg: "#1a1a2e", border: "#e2b659", label: "ENTRY",     labelBg: "#e2b659", labelText: "#1a1a2e" },
+      safety:       { bg: "#2d1520", border: "#e05555", label: "SAFETY",    labelBg: "#e05555", labelText: "#fff" },
+      question:     { bg: "#1a2235", border: "#5b8fd9", label: "QUERY",     labelBg: "#5b8fd9", labelText: "#fff" },
+      branch:       { bg: "#1a2a22", border: "#4caf80", label: "BRANCH",    labelBg: "#4caf80", labelText: "#1a1a2e" },
+      assessment:   { bg: "#2a2235", border: "#b07fd9", label: "ASSESS",    labelBg: "#b07fd9", labelText: "#fff" },
+      intervention: { bg: "#2a2519", border: "#d9a84c", label: "INTERVENE", labelBg: "#d9a84c", labelText: "#1a1a2e" },
+      outcome:      { bg: "#192a2a", border: "#4cbfbf", label: "OUTCOME",   labelBg: "#4cbfbf", labelText: "#1a1a2e" },
+      gate:         { bg: "#252525", border: "#999",    label: "GATE",      labelBg: "#999",    labelText: "#1a1a2e" },
+      info:         { bg: "#1f2530", border: "#7a99c2", label: "INFO",      labelBg: "#7a99c2", labelText: "#1a1a2e" },
+    };
+
+    // ─── COMPONENTS ─────────────────────────────────────────────────────────────
+
+    function TreeNode({ node, depth = 0, path = [], expandedSet, toggleExpand, scrollToRef }) {
+      const config = TYPE_CONFIG[node.type] || TYPE_CONFIG.info;
+      const hasChildren = node.children && node.children.length > 0;
+      const nodeKey = node.id;
+      const isExpanded = expandedSet.has(nodeKey);
+      const ref = useRef(null);
+
+      useEffect(() => {
+        if (scrollToRef.current === nodeKey && ref.current) {
+          ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+          scrollToRef.current = null;
+        }
+      });
+
+      return (
+        <div ref={ref} style={{ marginLeft: depth === 0 ? 0 : 20, marginTop: depth === 0 ? 0 : 12 }}>
+          <div
+            onClick={() => { if (hasChildren) toggleExpand(nodeKey); }}
+            style={{
+              background: config.bg,
+              border: `1.5px solid ${config.border}`,
+              borderRadius: 8,
+              padding: "12px 16px",
+              cursor: hasChildren ? "pointer" : "default",
+              transition: "all 0.15s ease",
+              position: "relative",
+            }}
+            onMouseEnter={e => { if (hasChildren) e.currentTarget.style.borderColor = "#fff"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = config.border; }}
+          >
+            {/* Type label badge */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <span style={{
+                display: "inline-block",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                padding: "2px 7px",
+                borderRadius: 3,
+                background: config.labelBg,
+                color: config.labelText,
+                fontFamily: "'IBM Plex Mono', monospace",
+              }}>
+                {config.label}
+              </span>
+              {hasChildren && (
+                <span style={{
+                  fontSize: 10,
+                  color: "#888",
+                  fontFamily: "'IBM Plex Mono', monospace",
+                }}>
+                  {isExpanded ? "▾" : "▸"} {node.children.length} {node.children.length === 1 ? "branch" : "branches"}
+                </span>
+              )}
+            </div>
+
+            {/* Title */}
+            <div style={{
+              fontSize: 15,
+              fontWeight: 600,
+              color: "#e8e4dc",
+              lineHeight: 1.35,
+              fontFamily: "'Source Serif 4', Georgia, serif",
+              marginBottom: node.body ? 6 : 0,
+            }}>
+              {node.title}
+            </div>
+
+            {/* Body */}
+            {node.body && (
+              <div style={{
+                fontSize: 13,
+                color: "#b8b2a6",
+                lineHeight: 1.55,
+                fontFamily: "'IBM Plex Sans', Helvetica, sans-serif",
+              }}>
+                {node.body}
+              </div>
+            )}
+
+            {/* Annotation */}
+            {node.annotation && isExpanded && (
+              <div style={{
+                marginTop: 10,
+                padding: "10px 12px",
+                background: "rgba(255,255,255,0.04)",
+                borderLeft: `3px solid ${config.border}`,
+                borderRadius: "0 4px 4px 0",
+                fontSize: 12.5,
+                color: "#c9c3b8",
+                lineHeight: 1.55,
+                fontFamily: "'IBM Plex Sans', Helvetica, sans-serif",
+                fontStyle: "italic",
+              }}>
+                {node.annotation}
+              </div>
+            )}
+          </div>
+
+          {/* Children */}
+          {isExpanded && hasChildren && (
+            <div style={{
+              borderLeft: `1px dashed ${config.border}40`,
+              marginLeft: 16,
+              paddingLeft: 4,
+            }}>
+              {node.children.map(child => (
+                <TreeNode
+                  key={child.id}
+                  node={child}
+                  depth={depth + 1}
+                  path={[...path, node.id]}
+                  expandedSet={expandedSet}
+                  toggleExpand={toggleExpand}
+                  scrollToRef={scrollToRef}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ─── LEGEND ─────────────────────────────────────────────────────────────────
+
+    function Legend() {
+      const items = [
+        { type: "safety",       desc: "Red flag / refer" },
+        { type: "question",     desc: "Assessment query" },
+        { type: "branch",       desc: "Pathway branch" },
+        { type: "assessment",   desc: "Clinical assessment" },
+        { type: "intervention", desc: "Therapeutic intervention" },
+        { type: "outcome",      desc: "Outcome / marker" },
+        { type: "gate",         desc: "Proceed / redirect" },
+        { type: "info",         desc: "Mechanistic context" },
+      ];
+      return (
+        <div style={{
+          display: "flex", flexWrap: "wrap", gap: "6px 14px",
+          padding: "10px 14px",
+          background: "#111118",
+          borderRadius: 6,
+          marginBottom: 16,
+          border: "1px solid #2a2a35",
+        }}>
+          {items.map(it => {
+            const c = TYPE_CONFIG[it.type];
+            return (
+              <div key={it.type} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span style={{
+                  display: "inline-block", width: 8, height: 8,
+                  borderRadius: 2, background: c.border,
+                }} />
+                <span style={{
+                  fontSize: 10.5, color: "#999",
+                  fontFamily: "'IBM Plex Mono', monospace",
+                }}>
+                  {it.desc}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    // ─── BUTTON STYLE ────────────────────────────────────────────────────────────
+
+    const btnStyle = {
+      padding: "5px 10px",
+      fontSize: 11,
+      fontFamily: "'IBM Plex Mono', monospace",
+      background: "#16161e",
+      color: "#b8b2a6",
+      border: "1px solid #2a2a35",
+      borderRadius: 4,
+      cursor: "pointer",
+    };
+
+    // ─── MAIN APP ───────────────────────────────────────────────────────────────
+
+    function HistamineDecisionTree() {
+      const [expandedSet, setExpandedSet] = useState(new Set(["root"]));
+      const scrollToRef = useRef(null);
+
+      const toggleExpand = useCallback((id) => {
+        setExpandedSet(prev => {
+          const next = new Set(prev);
+          if (next.has(id)) next.delete(id);
+          else next.add(id);
+          return next;
+        });
+      }, []);
+
+      const expandAll = useCallback(() => {
+        const all = new Set();
+        const walk = (node) => { all.add(node.id); (node.children || []).forEach(walk); };
+        walk(TREE);
+        setExpandedSet(all);
+      }, []);
+
+      const collapseAll = useCallback(() => {
+        setExpandedSet(new Set(["root"]));
+      }, []);
+
+      const expandPath = useCallback((ids) => {
+        setExpandedSet(prev => {
+          const next = new Set(prev);
+          ids.forEach(id => next.add(id));
+          return next;
+        });
+        scrollToRef.current = ids[ids.length - 1];
+      }, []);
+
+      const quickPaths = [
+        { label: "Safety Screen",  ids: ["root", "safety-screen"] },
+        { label: "HIT Pathway",    ids: ["root", "initial-assessment", "temporal-pattern", "episodic-clear", "episodic-severity", "episodic-moderate", "trigger-type", "trigger-food-specific", "hit-assessment", "hit-drivers"] },
+        { label: "Complex Atopy",  ids: ["root", "initial-assessment", "temporal-pattern", "episodic-clear", "episodic-severity", "episodic-moderate", "trigger-type", "trigger-food-broad", "broad-atopic-check", "broad-atopic-yes", "atopy-assessment"] },
+        { label: "Sensitization",  ids: ["root", "initial-assessment", "temporal-pattern", "chronic-diffuse", "chronic-assess-systems", "chronic-neuro", "neuro-prominent", "sensitization-full", "sens-markers"] },
+        { label: "Gut-Centered",   ids: ["root", "initial-assessment", "temporal-pattern", "chronic-diffuse", "chronic-assess-systems", "chronic-gi", "gi-dominant", "gut-assessment"] },
+        { label: "POTS / Autonomic", ids: ["root", "initial-assessment", "temporal-pattern", "chronic-diffuse", "chronic-assess-systems", "chronic-autonomic", "pots-check"] },
+        { label: "Hormonal",       ids: ["root", "initial-assessment", "temporal-pattern", "chronic-diffuse", "chronic-assess-systems", "chronic-hormonal", "hormonal-branch"] },
+        { label: "What Always Helps", ids: ["root", "convergent-protocol"] },
+      ];
+
+      return (
+        <div style={{
+          maxWidth: 820,
+          margin: "0 auto",
+          padding: "24px 16px 60px",
+          fontFamily: "'IBM Plex Sans', Helvetica, sans-serif",
+          color: "#e8e4dc",
+          background: "#0d0d14",
+          minHeight: "100vh",
+        }}>
+          {/* Header */}
+          <div style={{ marginBottom: 20 }}>
+            <h1 style={{
+              fontSize: 22,
+              fontWeight: 700,
+              fontFamily: "'Source Serif 4', Georgia, serif",
+              color: "#e2b659",
+              margin: 0,
+              lineHeight: 1.3,
+            }}>
+              Clinical Assessment of "Histamine Issues"
+            </h1>
+            <p style={{
+              fontSize: 13,
+              color: "#888",
+              marginTop: 4,
+              lineHeight: 1.5,
+              fontFamily: "'IBM Plex Sans', Helvetica, sans-serif",
+            }}>
+              A branching decision tree for assessing those who present with suspected MCAS, histamine intolerance, or adjacent reactive multisystem pictures. Assumes no labs, no prescriptions — using herbs, supplements, dietary strategies, OTC medicines, and clinical reasoning.
+            </p>
+          </div>
+
+          {/* Controls */}
+          <div style={{
+            display: "flex", flexWrap: "wrap", gap: 6,
+            marginBottom: 12,
+          }}>
+            <button onClick={expandAll} style={btnStyle}>Expand All</button>
+            <button onClick={collapseAll} style={btnStyle}>Collapse All</button>
+            <span style={{ width: 1, background: "#333", margin: "0 4px" }} />
+            {quickPaths.map(qp => (
+              <button
+                key={qp.label}
+                onClick={() => expandPath(qp.ids)}
+                style={{ ...btnStyle, background: "#1a1a28", borderColor: "#3a3a4a" }}
+              >
+                {qp.label}
+              </button>
+            ))}
+          </div>
+
+          <Legend />
+
+          {/* Tree */}
+          <TreeNode
+            node={TREE}
+            expandedSet={expandedSet}
+            toggleExpand={toggleExpand}
+            scrollToRef={scrollToRef}
+          />
+        </div>
+      );
+    }
+
+    // ─── MOUNT ──────────────────────────────────────────────────────────────────
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<HistamineDecisionTree />);
+  </script>
+</body>
+</html>
