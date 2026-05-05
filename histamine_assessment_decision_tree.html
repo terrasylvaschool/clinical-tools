@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clinical Assessment of "Histamine Issues"</title>
+  <title>Clinical Assessment of "Histamine Issues" — v1.1</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -87,7 +87,7 @@ const TREE = {
               id: "episodic-clear", type: "branch",
               title: "EPISODIC: Discrete episodes with clear triggers and resolution",
               body: "Client describes identifiable episodes: exposure \u2192 reaction within minutes to hours \u2192 resolution over hours to a day. Between episodes, they feel relatively well. Triggers may include specific foods, environmental exposures, exercise, heat, medications.",
-              annotation: "This pattern is more consistent with IgE-mediated atopy, genuine MC activation events, or pharmacological histamine intolerance. The episodic structure with clear triggers and resolution suggests a threshold-and-release or dose-dependent mechanism rather than sensitization.",
+              annotation: "This pattern is more consistent with IgE-mediated atopy, genuine MC activation events, or pharmacological histamine intolerance. The episodic structure with clear triggers and resolution suggests a threshold-and-release or dose-dependent mechanism rather than sensitization \u2014 though see the sensitization-modifier checks within each pathway: sensitization can wear an allergic costume.",
               children: [
                 {
                   id: "episodic-severity", type: "question",
@@ -106,115 +106,104 @@ const TREE = {
                       body: "Flushing, urticaria, GI symptoms, headache, brain fog, nasal congestion \u2014 uncomfortable and sometimes disabling but no hemodynamic compromise.",
                       children: [
                         {
-                          id: "trigger-type", type: "question",
-                          title: "What triggers the episodes?",
-                          body: "Map the trigger landscape carefully. This is high-leverage assessment data.",
+                          id: "atopic-history-check", type: "question",
+                          title: "Personal or family history of atopy?",
+                          body: "Eczema, asthma, allergic rhinitis, known allergies (food, environmental, drug, venom)? Childhood atopic history? Family members with atopic disease? This question reframes the interpretation of whatever triggers are subsequently identified \u2014 atopic substrate places the presentation in a different mechanistic frame regardless of which specific trigger category dominates.",
+                          annotation: "Atopic history is the architecturally decisive variable, more so than trigger type. A client with documented atopic disease and episodic multisystem reactions belongs in the complex atopy branch almost regardless of whether their leading triggers are food, environmental, or skin/respiratory. Trigger characterization is a refinement WITHIN the atopy branch, not a gateway to it.",
                           children: [
                             {
-                              id: "trigger-food-specific", type: "branch",
-                              title: "Specific foods, especially high-histamine foods",
-                              body: "Aged cheeses, fermented foods, wine/beer, cured meats, leftover proteins, canned fish, vinegar, sauerkraut, kombucha, soy sauce. Symptoms reliably follow ingestion within 30 min to 2 hours.",
-                              annotation: "This is the classic dietary histamine intolerance pattern. The trigger list maps to histamine content, not allergic reaction.",
+                              id: "atopic-history-yes", type: "branch",
+                              title: "Atopic history present \u2192 COMPLEX ATOPY pathway",
+                              body: "This person likely has polysensitized IgE-mediated atopic disease with multisystem expression. Their 'histamine issues' are likely mast cells degranulating in response to genuine IgE-mediated triggers, not impaired histamine catabolism.",
+                              annotation: "Complex atopy can look like MCAS: multisystem reactivity, food triggers, flushing, GI symptoms, brain fog from inflammatory mediators. The mechanism is IgE-mediated MC activation \u2014 mast cells are genuinely involved, but driven by adaptive immune sensitization to specific antigens, not primary MC pathology.",
                               children: [
                                 {
-                                  id: "hit-assessment", type: "assessment",
-                                  title: "\u2192 DIETARY HISTAMINE INTOLERANCE pathway",
-                                  body: "Primary suspicion: impaired histamine catabolism (DAO insufficiency), possibly compounded by gut dysbiosis producing endogenous histamine. Proceed to HIT driver assessment.",
+                                  id: "atopy-presentation-pattern", type: "question",
+                                  title: "Which presentation pattern leads the picture?",
+                                  body: "Polysensitized atopy can lead with any of several trigger landscapes. Identify the dominant pattern as a refinement; assessment and intervention strategy share a common core regardless. The pattern matters more for trigger management and client framing than for the underlying mechanistic logic.",
                                   children: [
                                     {
-                                      id: "hit-drivers", type: "question",
-                                      title: "Assess drivers of DAO insufficiency",
-                                      body: "Multiple factors can reduce DAO activity. Investigate each:",
+                                      id: "atopy-food-led", type: "branch",
+                                      title: "Food reactivity dominant",
+                                      body: "Broad reactivity to foods that doesn't map to histamine content \u2014 fresh fruits, vegetables, wheat, dairy, eggs, nuts, various proteins. The trigger list follows IgE allergenicity rather than histamine level. New intolerances may continue appearing. Possible oral allergy syndrome (cross-reactivity with environmental pollens).",
+                                      children: []
+                                    },
+                                    {
+                                      id: "atopy-environmental-led", type: "branch",
+                                      title: "Aeroallergens / environmental triggers dominant",
+                                      body: "Symptoms track pollen seasons, dust mite exposure, animal dander, mold environments. Multisystem expression \u2014 flushing, GI symptoms, brain fog \u2014 appears or amplifies during environmental exposure periods even without obvious food triggers. Exercise, heat, and humidity often function as amplifiers via inflammatory baseline.",
+                                      annotation: "This is the presentation that the prior tree structure failed to route to atopy. A client with seasonal multisystem reactivity, persistent rhinitis, exercise-triggered flushing, and brain fog in pollen season \u2014 with a clear atopic history \u2014 belongs here regardless of whether food triggers are prominent.",
+                                      children: []
+                                    },
+                                    {
+                                      id: "atopy-skin-resp-led", type: "branch",
+                                      title: "Skin and respiratory symptoms lead the picture",
+                                      body: "Chronic urticaria, persistent rhinitis, eczema, asthma \u2014 with periodic multisystem flares (flushing, GI symptoms, brain fog) that the client may not frame as 'reactions.' The atopic disease is operating as the chronic substrate; flares represent threshold-crossing events on top of a chronically inflamed baseline.",
+                                      children: []
+                                    },
+                                    {
+                                      id: "atopy-mixed", type: "branch",
+                                      title: "Multisystem from outset, no single trigger category dominant",
+                                      body: "Polysensitized atopy with triggers spanning food, environmental, and physical (heat, exercise, vibration, mechanical) domains. Heavy IgE-loading appears to have eroded mast cell trigger specificity \u2014 the cells respond to physical and non-immunological stimuli as though intrinsically unstable. This is the atopic presentation that converges most closely with idiopathic MCAS phenomenology.",
+                                      annotation: "When polysensitized atopy reaches this point, the Vienna criteria cannot reliably distinguish severe atopy with MC instability from comorbid idiopathic MCAS. The clinical strategy is similar regardless: aggressive trigger management, MC stabilization, and immune modulation \u2014 with attention to whether sensitization dynamics are compounding the picture (see the sensitization-modifier check below).",
+                                      children: []
+                                    }
+                                  ]
+                                },
+                                {
+                                  id: "atopy-assessment", type: "assessment",
+                                  title: "Assess the scope of atopic involvement",
+                                  body: "Map all systems involved: skin (eczema, urticaria, angioedema), respiratory (asthma, rhinitis, congestion), GI (cramping, diarrhea, nausea after specific foods), cardiovascular (flushing, tachycardia), neurological (brain fog, headache \u2014 cytokine-mediated).",
+                                  children: [
+                                    {
+                                      id: "atopy-why-multi", type: "info",
+                                      title: "Why atopy goes multisystem",
+                                      body: "Atopic disease is taught as organ-specific (eczema = skin, asthma = airway) but this is a teaching artifact. Polysensitized atopy involves: (1) IgE-sensitized mast cells throughout ALL mucosal and connective tissues; (2) Th2-skewed systemic immune polarization; (3) autonomic consequences \u2014 histamine directly modulates heart rate and vascular tone; (4) CNS effects from circulating cytokines; (5) gut barrier disruption from intestinal MC activation allowing further antigen exposure, creating new sensitizations.",
+                                      children: []
+                                    },
+                                    {
+                                      id: "atopy-sens-modifier", type: "question",
+                                      title: "Before confirming this pathway: is sensitization amplifying the picture?",
+                                      body: "Sensitization can run beneath an apparently atopic presentation and amplify it. Sensitized peripheral nociceptors and enteric neurons generate real tissue-level events including local MC degranulation and neurogenic inflammation \u2014 producing what feels and looks like an allergic reaction but is partly nervous-system-driven. This check is most consequential in the polysensitized / multisystem-from-outset presentation, where the line with idiopathic MCAS-phenomenology is already blurred.",
+                                      annotation: "MARKERS suggesting sensitization is operating as a co-driver: (1) Context-dependence \u2014 the same exposure produces variable responses depending on stress, sleep, emotional state; (2) Expanding reactivity without new immunological exposure \u2014 new intolerances appearing in the absence of obvious sensitization events; (3) Reactions that vary with nervous system state rather than dose; (4) Poor ceiling on standard atopic interventions \u2014 partial improvement from antihistamines, MC stabilizers, and trigger avoidance that plateaus despite compliance; (5) Comorbid sensitization-spectrum conditions (fibromyalgia, IBS, MCS, POTS, migraine, chronic fatigue, hypermobility/EDS, neurodivergence). If multiple markers are present, the atopy framework remains correct but is incomplete \u2014 nervous system regulation needs to be layered into the protocol from the start, not added later when interventions plateau.",
                                       children: [
                                         {
-                                          id: "hit-alcohol", type: "question",
-                                          title: "Does alcohol dramatically worsen symptoms?",
-                                          body: "Ethanol and acetaldehyde are direct DAO inhibitors. If alcohol reliably provokes or worsens reactions to histamine-containing foods, this confirms the DAO pathway is limiting clearance. Wine and beer (which also contain histamine) will be worst.",
-                                          annotation: "This is one of the most reliable clinical confirmations of the DAO mechanism. Alcohol doesn't just add histamine load \u2014 it actively suppresses the enzyme that clears it.",
-                                          children: [
-                                            {
-                                              id: "hit-alcohol-yes", type: "intervention",
-                                              title: "Alcohol dramatically worsens: confirms DAO limitation",
-                                              body: "Strong signal for DAO-mediated HIT. Alcohol avoidance or significant reduction is a high-leverage intervention. Even modest alcohol use may be maintaining the intolerance.",
-                                              children: []
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          id: "hit-meds", type: "question",
-                                          title: "Any DAO-inhibiting medications?",
-                                          body: "Check for: NSAIDs (ibuprofen, aspirin \u2014 regular use), amitriptyline, isoniazid. These competitively inhibit DAO.",
-                                          annotation: "You can't prescribe alternatives, but you can identify the contribution and recommend the client discuss alternatives with their prescriber.",
+                                          id: "atopy-sens-redirect", type: "gate",
+                                          title: "Markers present \u2192 Cross-reference SENSITIZATION pathway",
+                                          body: "Continue with the atopy-directed protocol below, AND layer in nervous system regulation, sleep restoration, and HPA support from the sensitization pathway as primary co-interventions. The therapeutic trajectory here is different: improvement may require both peripheral MC quieting AND central gain reduction.",
                                           children: []
-                                        },
-                                        {
-                                          id: "hit-gut-damage", type: "question",
-                                          title: "History of gut mucosal injury?",
-                                          body: "Prior GI infections (post-infectious IBS), IBD, NSAID enteropathy, suspected celiac, history of chronic PPI use, frequent antibiotic courses. DAO is expressed at villus tips \u2014 the cells most vulnerable to mucosal damage.",
-                                          annotation: "If DAO deficiency is secondary to mucosal damage, the primary intervention is mucosal healing rather than indefinite DAO supplementation. This reframes the timeline: HIT may be reversible.",
-                                          children: [
-                                            {
-                                              id: "hit-mucosal-healing", type: "intervention",
-                                              title: "Mucosal healing protocol",
-                                              body: "If mucosal damage is suspected as the driver of DAO insufficiency: gut-healing herbs (Glycyrrhiza, Althaea, Calendula, Plantago), L-glutamine, zinc carnosine, removal of ongoing irritants (NSAIDs, alcohol). Monitor for expanding food tolerance over weeks to months as a marker of mucosal recovery.",
-                                              annotation: "The therapeutic trial is also diagnostic: if food tolerance expands as mucosal support proceeds, it confirms that DAO deficiency is secondary to mucosal injury.",
-                                              children: []
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          id: "hit-cofactors", type: "intervention",
-                                          title: "Cofactor support for DAO function",
-                                          body: "DAO is a copper-containing amine oxidase requiring copper and vitamin C (with some evidence for B6 as a broader cofactor). Ensure adequacy \u2014 not megadosing, but sufficiency. Copper is rarely deficient but worth checking diet/supplementation patterns (excess zinc can deplete copper). Vitamin C is a reasonable low-risk intervention.",
-                                          annotation: "Note: DAO is NOT riboflavin-dependent (that's MAO). The copper cofactor is the mechanistically correct target.",
-                                          children: []
-                                        },
-                                        {
-                                          id: "hit-dao-supplement", type: "intervention",
-                                          title: "DAO supplementation trial",
-                                          body: "Exogenous DAO (porcine kidney-derived, e.g. Pure Encapsulations DAO, DAOSiN) taken 15-20 min before meals containing histamine. Immediate stopgap for DAO deficiency \u2014 adds enzyme capacity exactly when needed.",
-                                          annotation: "Useful as a therapeutic trial: clear improvement with pre-meal DAO confirms the DAO-mediated mechanism and distinguishes it from MC-mediated or sensitization-driven food reactivity.",
-                                          children: []
-                                        },
-                                        {
-                                          id: "hit-sibo-check", type: "question",
-                                          title: "Signs of SIBO / dysbiosis as endogenous histamine source?",
-                                          body: "Bloating (especially postprandial), gas, irregular bowel patterns, symptoms that don't fully resolve with low-histamine diet alone. SIBO-associated bacteria (Morganella, Klebsiella, some Lactobacillus strains) produce histamine endogenously from dietary histidine \u2014 independent of preformed histamine in food.",
-                                          annotation: "If a low-histamine diet helps but doesn't fully resolve symptoms, endogenous gut histamine production is a strong suspect. The gut is producing its own histamine load that dietary restriction can't fully address.",
-                                          children: [
-                                            {
-                                              id: "hit-sibo-branch", type: "branch",
-                                              title: "\u2192 Cross-reference with GUT pathway",
-                                              body: "If SIBO/dysbiosis is suspected, integrate with the gut-directed assessment branch. Antimicrobial herbs (Berberis spp., Allium sativum, Origanum vulgare essential oil), prokinetics for MMC support (Zingiber, Iberogast-type formulas), and careful probiotic selection (avoid histamine-producing strains like L. reuteri, favor DAO-supporting strains like B. infantis, L. rhamnosus GG).",
-                                              children: []
-                                            }
-                                          ]
                                         }
                                       ]
                                     },
                                     {
-                                      id: "hit-trial", type: "intervention",
-                                      title: "THERAPEUTIC TRIAL: Low-histamine diet + DAO",
-                                      body: "2-4 week strict low-histamine elimination, with DAO supplementation before meals. Track symptoms daily. Also eliminate alcohol completely during the trial.",
-                                      annotation: "INTERPRETING RESULTS: (1) Dramatic improvement \u2192 confirms dietary histamine is the primary driver. (2) Partial improvement \u2192 dietary histamine is a contributor but not the whole picture; assess for endogenous gut sources, sensitization overlay, or atopic component. (3) Minimal improvement \u2192 dietary histamine is not the primary mechanism; reassess toward sensitization or atopic pathways.",
+                                      id: "atopy-interventions", type: "intervention",
+                                      title: "Atopy-directed intervention strategy",
+                                      body: "Different priorities than HIT: the goal is reducing IgE-mediated reactivity and Th2 polarization, not just lowering histamine load.",
                                       children: [
                                         {
-                                          id: "hit-trial-full", type: "outcome",
-                                          title: "Full resolution \u2192 Dietary HIT confirmed",
-                                          body: "Primary mechanism is impaired histamine breakdown. Long-term strategy: address underlying DAO-reducing factors (mucosal healing, alcohol reduction, cofactors), use DAO supplementation as bridge, and gradually reintroduce foods to establish individual tolerance thresholds. Goal is expanding tolerance, not permanent restriction.",
+                                          id: "atopy-trigger-id", type: "intervention",
+                                          title: "Trigger identification and management",
+                                          body: "Systematic food-symptom tracking with attention to IgE-pattern timing (rapid onset, minutes to 2 hours) and cross-reactivity patterns (oral allergy syndrome with pollens). Environmental allergen assessment: dust mites, mold, pet dander, pollen seasons. Recommend allergy testing via prescriber if not done. For identified triggers: avoidance is appropriate here (unlike sensitization, where avoidance maintains the problem).",
+                                          annotation: "Important distinction: in atopy, avoidance of identified allergens is appropriate and protective. In sensitization, progressive avoidance deepens the problem. When the two coexist, the strategy must accommodate both \u2014 maintain avoidance of demonstrated IgE-allergens while resisting the spread of avoidance into non-allergenic territory.",
                                           children: []
                                         },
                                         {
-                                          id: "hit-trial-partial", type: "outcome",
-                                          title: "Partial improvement \u2192 Mixed picture",
-                                          body: "Dietary histamine is a real contributor but not the whole story. Likely co-drivers: endogenous gut histamine production (\u2192 assess SIBO/dysbiosis), atopic component generating MC-derived histamine independent of diet, sensitization overlay amplifying the response to residual histamine load, or hormonal modulation.",
-                                          annotation: "This is the most common outcome in practice and the most clinically important to handle well. It confirms something real without fully resolving the picture. Proceed to assess the other contributing mechanisms.",
+                                          id: "atopy-immune-modulation", type: "intervention",
+                                          title: "Immune modulation: Th2 \u2192 Th1/Treg rebalancing",
+                                          body: "Herbal immunomodulators with evidence for shifting Th2 polarization: Astragalus membranaceus (Th1 support), medicinal mushrooms (Ganoderma, Trametes \u2014 beta-glucan-mediated immune training), Nigella sativa (thymoquinone \u2014 reduces IgE, shifts Th1/Th2 balance). Vitamin D optimization (Th2-dampening). Omega-3 fatty acids (resolvin precursors). Gut-directed work to reduce antigen translocation driving new sensitizations.",
                                           children: []
                                         },
                                         {
-                                          id: "hit-trial-minimal", type: "outcome",
-                                          title: "Minimal improvement \u2192 HIT not the primary driver",
-                                          body: "Dietary histamine is not the rate-limiting factor. Reassess: Is this an atopic picture with non-histamine triggers? A sensitization picture where avoidance doesn't change the central gain? A hormonal or autonomic picture that dietary change can't address? Proceed to other assessment branches.",
+                                          id: "atopy-mc-stabilize", type: "intervention",
+                                          title: "MC stabilization is appropriate here",
+                                          body: "Quercetin, luteolin, vitamin C, and OTC H1 antihistamines (cetirizine, loratadine) are genuinely helpful for atopic MC degranulation. These reduce mediator release and downstream symptoms. The MCAS protocol overlaps with appropriate atopy management here \u2014 but the framing difference matters: you're managing atopic disease, not primary MC pathology.",
+                                          children: []
+                                        },
+                                        {
+                                          id: "atopy-epinephrine", type: "safety",
+                                          title: "Anaphylaxis risk assessment",
+                                          body: "If the client has IgE-mediated food allergy with any history of systemic reactions (throat tightness, difficulty breathing, significant cardiovascular symptoms, multi-organ involvement from a single food), they should carry epinephrine and have an anaphylaxis action plan. This may be UNDER-managed in the MCAS-adjacent population who are treating anaphylaxis risk with antihistamines and quercetin.",
+                                          annotation: "This is one of the most important practical consequences of misframing atopy as MCAS: the client may not be carrying epinephrine when they should be.",
                                           children: []
                                         }
                                       ]
@@ -224,61 +213,135 @@ const TREE = {
                               ]
                             },
                             {
-                              id: "trigger-food-broad", type: "branch",
-                              title: "Broad food reactivity that doesn't map to histamine content",
-                              body: "Reactions to foods that are NOT high in histamine: fresh fruits, vegetables, wheat, dairy, eggs, nuts, various proteins. The trigger list doesn't follow histamine content \u2014 it follows IgE allergenicity OR seems almost random / expanding. New intolerances keep appearing.",
+                              id: "atopic-history-no", type: "branch",
+                              title: "No significant atopic history \u2192 trigger characterization",
+                              body: "Without an atopic substrate, the differential narrows substantially: dietary histamine intolerance, sensitization (peripheral and/or central), or gut-mediated histamine production. Trigger type now becomes the primary refinement variable.",
+                              annotation: "Note: if aeroallergen reactivity (dust mite, mold, pet dander, pollen) emerges later in this branch, the upstream 'no atopy' answer was likely incomplete \u2014 atopic markers may have been undiagnosed, dismissed, or unrecognized as such. The environmental trigger pathway includes a check that redirects back to the atopy branch in that case.",
                               children: [
                                 {
-                                  id: "broad-atopic-check", type: "question",
-                                  title: "Personal or family history of atopy?",
-                                  body: "Eczema, asthma, allergic rhinitis, known allergies (food, environmental, drug, venom)? Childhood atopic history? Family members with atopic disease?",
+                                  id: "trigger-type", type: "question",
+                                  title: "What triggers the episodes?",
+                                  body: "Map the trigger landscape carefully. This is high-leverage assessment data.",
                                   children: [
                                     {
-                                      id: "broad-atopic-yes", type: "branch",
-                                      title: "Atopic history present \u2192 COMPLEX ATOPY pathway",
-                                      body: "This person likely has polysensitized IgE-mediated atopic disease with multisystem expression. Their 'histamine issues' are likely mast cells degranulating in response to genuine IgE-mediated triggers, not impaired histamine catabolism.",
-                                      annotation: "Complex atopy can look like MCAS: multisystem reactivity, food triggers, flushing, GI symptoms, brain fog from inflammatory mediators. The mechanism is IgE-mediated MC activation \u2014 mast cells are genuinely involved, but driven by adaptive immune sensitization to specific antigens, not primary MC pathology.",
+                                      id: "trigger-food-specific", type: "branch",
+                                      title: "Specific foods, especially high-histamine foods",
+                                      body: "Aged cheeses, fermented foods, wine/beer, cured meats, leftover proteins, canned fish, vinegar, sauerkraut, kombucha, soy sauce. Symptoms reliably follow ingestion within 30 min to 2 hours.",
+                                      annotation: "This is the classic dietary histamine intolerance pattern. The trigger list maps to histamine content, not allergic reaction.",
                                       children: [
                                         {
-                                          id: "atopy-assessment", type: "assessment",
-                                          title: "Assess the scope of atopic involvement",
-                                          body: "Map all systems involved: skin (eczema, urticaria, angioedema), respiratory (asthma, rhinitis, congestion), GI (cramping, diarrhea, nausea after specific foods), cardiovascular (flushing, tachycardia), neurological (brain fog, headache \u2014 cytokine-mediated).",
+                                          id: "hit-assessment", type: "assessment",
+                                          title: "\u2192 DIETARY HISTAMINE INTOLERANCE pathway",
+                                          body: "Primary suspicion: impaired histamine catabolism (DAO insufficiency), possibly compounded by gut dysbiosis producing endogenous histamine. Proceed to HIT driver assessment.",
                                           children: [
                                             {
-                                              id: "atopy-why-multi", type: "info",
-                                              title: "Why atopy goes multisystem",
-                                              body: "Atopic disease is taught as organ-specific (eczema = skin, asthma = airway) but this is a teaching artifact. Polysensitized atopy involves: (1) IgE-sensitized mast cells throughout ALL mucosal and connective tissues; (2) Th2-skewed systemic immune polarization; (3) autonomic consequences \u2014 histamine directly modulates heart rate and vascular tone; (4) CNS effects from circulating cytokines; (5) gut barrier disruption from intestinal MC activation allowing further antigen exposure, creating new sensitizations.",
-                                              children: []
-                                            },
-                                            {
-                                              id: "atopy-interventions", type: "intervention",
-                                              title: "Atopy-directed intervention strategy",
-                                              body: "Different priorities than HIT: the goal is reducing IgE-mediated reactivity and Th2 polarization, not just lowering histamine load.",
+                                              id: "hit-drivers", type: "question",
+                                              title: "Assess drivers of DAO insufficiency",
+                                              body: "Multiple factors can reduce DAO activity. Investigate each:",
                                               children: [
                                                 {
-                                                  id: "atopy-trigger-id", type: "intervention",
-                                                  title: "Trigger identification and management",
-                                                  body: "Systematic food-symptom tracking with attention to IgE-pattern timing (rapid onset, minutes to 2 hours) and cross-reactivity patterns (oral allergy syndrome with pollens). Environmental allergen assessment: dust mites, mold, pet dander, pollen seasons. Recommend allergy testing via prescriber if not done. For identified triggers: avoidance is appropriate here (unlike sensitization, where avoidance maintains the problem).",
-                                                  annotation: "Important distinction: in atopy, avoidance of identified allergens is appropriate and protective. In sensitization, progressive avoidance deepens the problem.",
+                                                  id: "hit-alcohol", type: "question",
+                                                  title: "Does alcohol dramatically worsen symptoms?",
+                                                  body: "Ethanol and acetaldehyde are direct DAO inhibitors. If alcohol reliably provokes or worsens reactions to histamine-containing foods, this confirms the DAO pathway is limiting clearance. Wine and beer (which also contain histamine) will be worst.",
+                                                  annotation: "This is one of the most reliable clinical confirmations of the DAO mechanism. Alcohol doesn't just add histamine load \u2014 it actively suppresses the enzyme that clears it.",
+                                                  children: [
+                                                    {
+                                                      id: "hit-alcohol-yes", type: "intervention",
+                                                      title: "Alcohol dramatically worsens: confirms DAO limitation",
+                                                      body: "Strong signal for DAO-mediated HIT. Alcohol avoidance or significant reduction is a high-leverage intervention. Even modest alcohol use may be maintaining the intolerance.",
+                                                      children: []
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  id: "hit-meds", type: "question",
+                                                  title: "Any DAO-inhibiting medications?",
+                                                  body: "Check for: NSAIDs (ibuprofen, aspirin \u2014 regular use), amitriptyline, isoniazid. These competitively inhibit DAO.",
+                                                  annotation: "You can't prescribe alternatives, but you can identify the contribution and recommend the client discuss alternatives with their prescriber.",
                                                   children: []
                                                 },
                                                 {
-                                                  id: "atopy-immune-modulation", type: "intervention",
-                                                  title: "Immune modulation: Th2 \u2192 Th1/Treg rebalancing",
-                                                  body: "Herbal immunomodulators with evidence for shifting Th2 polarization: Astragalus membranaceus (Th1 support), medicinal mushrooms (Ganoderma, Trametes \u2014 beta-glucan-mediated immune training), Nigella sativa (thymoquinone \u2014 reduces IgE, shifts Th1/Th2 balance). Vitamin D optimization (Th2-dampening). Omega-3 fatty acids (resolvin precursors). Gut-directed work to reduce antigen translocation driving new sensitizations.",
+                                                  id: "hit-gut-damage", type: "question",
+                                                  title: "History of gut mucosal injury?",
+                                                  body: "Prior GI infections (post-infectious IBS), IBD, NSAID enteropathy, suspected celiac, history of chronic PPI use, frequent antibiotic courses. DAO is expressed at villus tips \u2014 the cells most vulnerable to mucosal damage.",
+                                                  annotation: "If DAO deficiency is secondary to mucosal damage, the primary intervention is mucosal healing rather than indefinite DAO supplementation. This reframes the timeline: HIT may be reversible.",
+                                                  children: [
+                                                    {
+                                                      id: "hit-mucosal-healing", type: "intervention",
+                                                      title: "Mucosal healing protocol",
+                                                      body: "If mucosal damage is suspected as the driver of DAO insufficiency: gut-healing herbs (Glycyrrhiza, Althaea, Calendula, Plantago), L-glutamine, zinc carnosine, removal of ongoing irritants (NSAIDs, alcohol). Monitor for expanding food tolerance over weeks to months as a marker of mucosal recovery.",
+                                                      annotation: "The therapeutic trial is also diagnostic: if food tolerance expands as mucosal support proceeds, it confirms that DAO deficiency is secondary to mucosal injury.",
+                                                      children: []
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  id: "hit-cofactors", type: "intervention",
+                                                  title: "Cofactor support for DAO function",
+                                                  body: "DAO is a copper-containing amine oxidase requiring copper and vitamin C (with some evidence for B6 as a broader cofactor). Ensure adequacy \u2014 not megadosing, but sufficiency. Copper is rarely deficient but worth checking diet/supplementation patterns (excess zinc can deplete copper). Vitamin C is a reasonable low-risk intervention.",
+                                                  annotation: "Note: DAO is NOT riboflavin-dependent (that's MAO). The copper cofactor is the mechanistically correct target.",
                                                   children: []
                                                 },
                                                 {
-                                                  id: "atopy-mc-stabilize", type: "intervention",
-                                                  title: "MC stabilization is appropriate here",
-                                                  body: "Quercetin, luteolin, vitamin C, and OTC H1 antihistamines (cetirizine, loratadine) are genuinely helpful for atopic MC degranulation. These reduce mediator release and downstream symptoms. The MCAS protocol overlaps with appropriate atopy management here \u2014 but the framing difference matters: you're managing atopic disease, not primary MC pathology.",
+                                                  id: "hit-dao-supplement", type: "intervention",
+                                                  title: "DAO supplementation trial",
+                                                  body: "Exogenous DAO (porcine kidney-derived, e.g. Pure Encapsulations DAO, DAOSiN) taken 15-20 min before meals containing histamine. Immediate stopgap for DAO deficiency \u2014 adds enzyme capacity exactly when needed.",
+                                                  annotation: "Useful as a therapeutic trial: clear improvement with pre-meal DAO confirms the DAO-mediated mechanism and distinguishes it from MC-mediated or sensitization-driven food reactivity.",
                                                   children: []
                                                 },
                                                 {
-                                                  id: "atopy-epinephrine", type: "safety",
-                                                  title: "Anaphylaxis risk assessment",
-                                                  body: "If the client has IgE-mediated food allergy with any history of systemic reactions (throat tightness, difficulty breathing, significant cardiovascular symptoms, multi-organ involvement from a single food), they should carry epinephrine and have an anaphylaxis action plan. This may be UNDER-managed in the MCAS-adjacent population who are treating anaphylaxis risk with antihistamines and quercetin.",
-                                                  annotation: "This is one of the most important practical consequences of misframing atopy as MCAS: the client may not be carrying epinephrine when they should be.",
+                                                  id: "hit-sibo-check", type: "question",
+                                                  title: "Signs of SIBO / dysbiosis as endogenous histamine source?",
+                                                  body: "Bloating (especially postprandial), gas, irregular bowel patterns, symptoms that don't fully resolve with low-histamine diet alone. SIBO-associated bacteria (Morganella, Klebsiella, some Lactobacillus strains) produce histamine endogenously from dietary histidine \u2014 independent of preformed histamine in food.",
+                                                  annotation: "If a low-histamine diet helps but doesn't fully resolve symptoms, endogenous gut histamine production is a strong suspect. The gut is producing its own histamine load that dietary restriction can't fully address.",
+                                                  children: [
+                                                    {
+                                                      id: "hit-sibo-branch", type: "branch",
+                                                      title: "\u2192 Cross-reference with GUT pathway",
+                                                      body: "If SIBO/dysbiosis is suspected, integrate with the gut-directed assessment branch. Antimicrobial herbs (Berberis spp., Allium sativum, Origanum vulgare essential oil), prokinetics for MMC support (Zingiber, Iberogast-type formulas), and careful probiotic selection (avoid histamine-producing strains like L. reuteri, favor DAO-supporting strains like B. infantis, L. rhamnosus GG).",
+                                                      children: []
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              id: "hit-sens-modifier", type: "question",
+                                              title: "Before running the trial: is sensitization amplifying the picture?",
+                                              body: "Sensitization can run beneath an apparently HIT-pattern presentation and amplify responses to residual histamine load that would otherwise be subclinical. Asking this BEFORE the therapeutic trial is important: it changes how trial results are interpreted, and prevents the common pattern where partial-then-plateau improvement gets misread as 'mostly HIT' when sensitization is the unaddressed amplifier.",
+                                              annotation: "MARKERS suggesting sensitization is operating beneath the HIT pattern: (1) Context-dependence \u2014 the same food produces variable responses depending on stress, sleep, emotional state, with calm-day tolerance and stressed-day reactivity; (2) Expanding reactivity \u2014 the list of 'safe' foods has been shrinking over months/years even with rigorous low-histamine eating; (3) Reactions that don't follow a clear histamine-content gradient even within the high-histamine category; (4) Poor ceiling \u2014 partial improvement from low-histamine diet and DAO that plateaus despite tight compliance; (5) Comorbid sensitization-spectrum conditions (fibromyalgia, IBS, MCS, POTS, migraine, chronic fatigue, hypermobility/EDS, neurodivergence). If multiple markers are present, layer in nervous system regulation alongside the HIT protocol from the start, and interpret the therapeutic trial below with explicit awareness that sensitization may be the rate-limiting factor.",
+                                              children: [
+                                                {
+                                                  id: "hit-sens-redirect", type: "gate",
+                                                  title: "Markers present \u2192 Cross-reference SENSITIZATION pathway",
+                                                  body: "Continue with the HIT protocol below AND simultaneously begin nervous system regulation, sleep restoration, and HPA support from the sensitization pathway. Frame the dietary work to the client as load-reduction creating space for nervous system work \u2014 not as the destination. Watch for the trial-plateau pattern as confirmation that sensitization is contributing.",
+                                                  children: []
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              id: "hit-trial", type: "intervention",
+                                              title: "THERAPEUTIC TRIAL: Low-histamine diet + DAO",
+                                              body: "2-4 week strict low-histamine elimination, with DAO supplementation before meals. Track symptoms daily. Also eliminate alcohol completely during the trial.",
+                                              annotation: "INTERPRETING RESULTS: (1) Dramatic improvement \u2192 confirms dietary histamine is the primary driver. (2) Partial improvement \u2192 dietary histamine is a contributor but not the whole picture; assess for endogenous gut sources, sensitization overlay, or atopic component. (3) Minimal improvement \u2192 dietary histamine is not the primary mechanism; reassess toward sensitization or atopic pathways.",
+                                              children: [
+                                                {
+                                                  id: "hit-trial-full", type: "outcome",
+                                                  title: "Full resolution \u2192 Dietary HIT confirmed",
+                                                  body: "Primary mechanism is impaired histamine breakdown. Long-term strategy: address underlying DAO-reducing factors (mucosal healing, alcohol reduction, cofactors), use DAO supplementation as bridge, and gradually reintroduce foods to establish individual tolerance thresholds. Goal is expanding tolerance, not permanent restriction.",
+                                                  children: []
+                                                },
+                                                {
+                                                  id: "hit-trial-partial", type: "outcome",
+                                                  title: "Partial improvement \u2192 Mixed picture",
+                                                  body: "Dietary histamine is a real contributor but not the whole story. Likely co-drivers: endogenous gut histamine production (\u2192 assess SIBO/dysbiosis), atopic component generating MC-derived histamine independent of diet, sensitization overlay amplifying the response to residual histamine load, or hormonal modulation.",
+                                                  annotation: "This is the most common outcome in practice and the most clinically important to handle well. It confirms something real without fully resolving the picture. If the sensitization-modifier markers were positive upstream, the partial-and-plateau pattern is itself confirmation that sensitization is contributing. Proceed to assess the other contributing mechanisms.",
+                                                  children: []
+                                                },
+                                                {
+                                                  id: "hit-trial-minimal", type: "outcome",
+                                                  title: "Minimal improvement \u2192 HIT not the primary driver",
+                                                  body: "Dietary histamine is not the rate-limiting factor. Reassess: Is this an atopic picture with non-histamine triggers? A sensitization picture where avoidance doesn't change the central gain? A hormonal or autonomic picture that dietary change can't address? Proceed to other assessment branches.",
                                                   children: []
                                                 }
                                               ]
@@ -288,44 +351,58 @@ const TREE = {
                                       ]
                                     },
                                     {
-                                      id: "broad-no-atopy", type: "branch",
-                                      title: "No significant atopic history \u2192 Assess for sensitization",
-                                      body: "Broad food reactivity without atopic substrate, especially if intolerances are expanding over time and don't follow IgE patterns (delayed onset, variable reactions to the same food, reactions that seem context-dependent).",
-                                      annotation: "Expanding reactivity without immunological substrate strongly suggests central and/or peripheral sensitization driving the picture. The nervous system is amplifying signals, not the immune system generating them.",
+                                      id: "trigger-food-broad", type: "branch",
+                                      title: "Broad food reactivity that doesn't map to histamine content",
+                                      body: "Reactions to foods that are NOT high in histamine: fresh fruits, vegetables, wheat, dairy, eggs, nuts, various proteins. The trigger list doesn't follow histamine content \u2014 and atopy has already been excluded upstream. The most likely picture is sensitization expressing through food, especially if reactivity is expanding over time, doesn't follow IgE patterns (variable responses to the same food, context-dependent reactions, delayed onset), or follows a course-of-restriction pattern where the 'safe' list keeps shrinking.",
+                                      annotation: "Broad food reactivity without atopic substrate strongly suggests central and/or peripheral sensitization driving the picture. The nervous system is amplifying signals, not the immune system generating them. The food reactivity is one expression of a broader sensitization picture.",
                                       children: [
                                         {
-                                          id: "sensitization-redirect", type: "gate",
+                                          id: "trigger-food-broad-redirect", type: "gate",
                                           title: "\u2192 Proceed to SENSITIZATION pathway",
-                                          body: "This presentation is better assessed through the chronic/diffuse symptom branch (sensitization dynamics). The food reactivity is likely one expression of a broader sensitization picture.",
+                                          body: "This presentation is best assessed through the sensitization framework. Use the chronic/diffuse \u2192 sensitization branch as the assessment scaffold. Peripheral MC-stabilizing interventions may provide partial relief (peripheral MCs at nerve terminals do participate in the response), but the primary intervention is nervous system regulation.",
                                           children: []
                                         }
                                       ]
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              id: "trigger-environmental", type: "branch",
-                              title: "Environmental triggers: chemicals, fragrances, temperature, exercise",
-                              body: "Reactions to perfumes, cleaning products, smoke, paint, temperature changes, exercise, stress \u2014 triggers that are not dietary. May include multiple chemical sensitivity (MCS).",
-                              children: [
-                                {
-                                  id: "env-check-atopy", type: "question",
-                                  title: "Any identified environmental allergies?",
-                                  body: "Dust mite, mold, animal dander, pollen \u2014 standard aeroallergens. If present with known sensitizations, this may be underappreciated complex atopy with environmental triggers. If the triggers are NON-allergenic substances (chemicals, fragrances, temperature), this points more toward sensitization.",
-                                  children: [
+                                    },
                                     {
-                                      id: "env-mcs-pattern", type: "branch",
-                                      title: "Chemical/fragrance sensitivity pattern \u2192 SENSITIZATION",
-                                      body: "Reactivity to chemically diverse substances at concentrations well below toxicity thresholds, with symptoms that are multisystem and variable \u2014 this is the multiple chemical sensitivity (MCS) pattern. Strongly associated with central sensitization. The nervous system is treating chemical stimuli as threats at the detection level.",
-                                      annotation: "MCS is one of the clearest phenotypic markers for central sensitization. If present alongside 'histamine issues,' it significantly increases the probability that sensitization is a dominant driver over MC pathology or HIT.",
+                                      id: "trigger-environmental", type: "branch",
+                                      title: "Environmental triggers: chemicals, fragrances, temperature, exercise",
+                                      body: "Reactions to perfumes, cleaning products, smoke, paint, temperature changes, exercise, stress \u2014 triggers that are not dietary. May include multiple chemical sensitivity (MCS).",
                                       children: [
                                         {
-                                          id: "mcs-sensitization-redirect", type: "gate",
-                                          title: "\u2192 Proceed to SENSITIZATION pathway",
-                                          body: "Chemical sensitivity patterns are best addressed through the sensitization framework. Peripheral MC-stabilizing interventions may provide partial relief (MCs at nerve terminals do participate in the response), but the primary intervention is nervous system regulation.",
-                                          children: []
+                                          id: "env-check-atopy", type: "question",
+                                          title: "Any identified environmental allergies?",
+                                          body: "Dust mite, mold, animal dander, pollen \u2014 standard aeroallergens. The character of the environmental trigger landscape divides this branch sharply: aeroallergen reactivity points back to atopy (suggesting the upstream answer was incomplete), while non-allergenic chemical, fragrance, and temperature reactivity points toward sensitization.",
+                                          children: [
+                                            {
+                                              id: "env-aeroallergen-yes", type: "branch",
+                                              title: "Aeroallergen reactivity present \u2192 revisit ATOPY",
+                                              body: "If the client reacts to dust mite, mold, animal dander, or pollen, this is IgE-mediated environmental allergy \u2014 atopic by definition. The upstream 'no atopic history' answer likely missed something: undiagnosed allergic rhinitis attributed to 'sinus issues,' dismissed eczema, family pattern not recognized as atopy, or a client who doesn't connect their seasonal symptoms to the atopic frame.",
+                                              annotation: "Aeroallergen reactivity IS atopy. If it surfaces here, the architecturally correct move is to redirect to the COMPLEX ATOPY pathway (under 'Atopic history present') and characterize the presentation under the atopy-presentation-pattern node \u2014 most likely as environmental-led atopy.",
+                                              children: [
+                                                {
+                                                  id: "env-atopy-revisit-gate", type: "gate",
+                                                  title: "\u2192 Redirect to COMPLEX ATOPY pathway (environmental-led pattern)",
+                                                  body: "Cross to the atopy branch and assess as environmental-led atopy. The intervention strategy shifts: trigger management for identified aeroallergens, immune modulation, MC stabilization \u2014 not nervous-system regulation as the primary frame. (Though sensitization may also be present \u2014 see the atopy-sens-modifier check within that branch.)",
+                                                  children: []
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              id: "env-mcs-pattern", type: "branch",
+                                              title: "Chemical/fragrance sensitivity pattern \u2192 SENSITIZATION",
+                                              body: "Reactivity to chemically diverse substances at concentrations well below toxicity thresholds, with symptoms that are multisystem and variable \u2014 this is the multiple chemical sensitivity (MCS) pattern. Strongly associated with central sensitization. The nervous system is treating chemical stimuli as threats at the detection level.",
+                                              annotation: "MCS is one of the clearest phenotypic markers for central sensitization. If present alongside 'histamine issues,' it significantly increases the probability that sensitization is a dominant driver over MC pathology or HIT.",
+                                              children: [
+                                                {
+                                                  id: "mcs-sensitization-redirect", type: "gate",
+                                                  title: "\u2192 Proceed to SENSITIZATION pathway",
+                                                  body: "Chemical sensitivity patterns are best addressed through the sensitization framework. Peripheral MC-stabilizing interventions may provide partial relief (MCs at nerve terminals do participate in the response), but the primary intervention is nervous system regulation.",
+                                                  children: []
+                                                }
+                                              ]
+                                            }
+                                          ]
                                         }
                                       ]
                                     }
@@ -772,8 +849,8 @@ var btnStyle = {
 
 var quickPaths = [
   { label: "Safety Screen",    ids: ["root", "safety-screen"] },
-  { label: "HIT Pathway",      ids: ["root", "initial-assessment", "temporal-pattern", "episodic-clear", "episodic-severity", "episodic-moderate", "trigger-type", "trigger-food-specific", "hit-assessment", "hit-drivers"] },
-  { label: "Complex Atopy",    ids: ["root", "initial-assessment", "temporal-pattern", "episodic-clear", "episodic-severity", "episodic-moderate", "trigger-type", "trigger-food-broad", "broad-atopic-check", "broad-atopic-yes", "atopy-assessment"] },
+  { label: "HIT Pathway",      ids: ["root", "initial-assessment", "temporal-pattern", "episodic-clear", "episodic-severity", "episodic-moderate", "atopic-history-check", "atopic-history-no", "trigger-type", "trigger-food-specific", "hit-assessment", "hit-drivers", "hit-sens-modifier"] },
+  { label: "Complex Atopy",    ids: ["root", "initial-assessment", "temporal-pattern", "episodic-clear", "episodic-severity", "episodic-moderate", "atopic-history-check", "atopic-history-yes", "atopy-presentation-pattern", "atopy-assessment", "atopy-sens-modifier"] },
   { label: "Sensitization",    ids: ["root", "initial-assessment", "temporal-pattern", "chronic-diffuse", "chronic-assess-systems", "chronic-neuro", "neuro-prominent", "sensitization-full", "sens-markers"] },
   { label: "Gut-Centered",     ids: ["root", "initial-assessment", "temporal-pattern", "chronic-diffuse", "chronic-assess-systems", "chronic-gi", "gi-dominant", "gut-assessment"] },
   { label: "POTS / Autonomic", ids: ["root", "initial-assessment", "temporal-pattern", "chronic-diffuse", "chronic-assess-systems", "chronic-autonomic", "pots-check"] },
@@ -828,7 +905,11 @@ function HistamineDecisionTree() {
       h("p", { style: {
         fontSize: 13, color: "#888", marginTop: 4, lineHeight: 1.5,
         fontFamily: "'IBM Plex Sans', Helvetica, sans-serif",
-      }}, "A branching decision tree for assessing those who present with suspected MCAS, histamine intolerance, or adjacent reactive multisystem pictures. Assumes no labs, no prescriptions \u2014 using herbs, supplements, dietary strategies, OTC medicines, and clinical reasoning.")
+      }}, "A branching decision tree for assessing those who present with suspected MCAS, histamine intolerance, or adjacent reactive multisystem pictures. Assumes no labs, no prescriptions \u2014 using herbs, supplements, dietary strategies, OTC medicines, and clinical reasoning."),
+      h("p", { style: {
+        fontSize: 11, color: "#666", marginTop: 6, lineHeight: 1.5,
+        fontFamily: "'IBM Plex Mono', monospace",
+      }}, "v1.1 \u2014 atopic history moved upstream of trigger characterization; sensitization-modifier checks added within the HIT and complex-atopy pathways; aeroallergen-revisit gate added in the environmental branch.")
     ),
     h("div", { style: { display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 } },
       h("button", { onClick: expandAll, style: btnStyle }, "Expand All"),
