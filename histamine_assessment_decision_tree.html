@@ -68,7 +68,7 @@ const TREE = {
         {
           id: "safety-passed", type: "gate",
           title: "No red flags identified \u2192 Proceed to assessment",
-          body: "If none of the above red flags are present, the presentation is likely within the terrain manageable by a clinical herbalist: some combination of complex atopy, histamine intolerance, gut-mediated histamine production, sensitization dynamics, hormonal modulation, and/or subclinical mast cell priming. Proceed to detailed assessment.",
+          body: "If none of the above red flags are present, the presentation is likely within the terrain manageable by a clinical herbalist: some combination of complex atopy, histamine intolerance, gut-mediated histamine production, sensitization dynamics, hormonal modulation, and/or subclinical mast cell priming. Proceed to detailed assessment.\n\n→ If the mechanistic category is already apparent from the history, use the quickpath buttons at the top of the page to navigate directly to the relevant branch. Otherwise, continue into the full assessment below.",
           children: []
         }
       ]
@@ -170,7 +170,7 @@ const TREE = {
                                         {
                                           id: "atopy-sens-redirect", type: "gate",
                                           title: "Markers present \u2192 Cross-reference SENSITIZATION pathway",
-                                          body: "Continue with the atopy-directed protocol below, AND layer in nervous system regulation, sleep restoration, and HPA support from the sensitization pathway as primary co-interventions. The therapeutic trajectory here is different: improvement may require both peripheral MC quieting AND central gain reduction.",
+                                          body: "Continue with the atopy-directed protocol below, AND layer in nervous system regulation, sleep restoration, and HPA support from the sensitization pathway as primary co-interventions. The therapeutic trajectory here is different: improvement may require both peripheral MC quieting AND central gain reduction.\n\n→ Use the 'Sensitization' quickpath button at the top of the page to navigate directly to that pathway.",
                                           children: []
                                         }
                                       ]
@@ -314,7 +314,7 @@ const TREE = {
                                                 {
                                                   id: "hit-sens-redirect", type: "gate",
                                                   title: "Markers present \u2192 Cross-reference SENSITIZATION pathway",
-                                                  body: "Continue with the HIT protocol below AND simultaneously begin nervous system regulation, sleep restoration, and HPA support from the sensitization pathway. Frame the dietary work to the client as load-reduction creating space for nervous system work \u2014 not as the destination. Watch for the trial-plateau pattern as confirmation that sensitization is contributing.",
+                                                  body: "Continue with the HIT protocol below AND simultaneously begin nervous system regulation, sleep restoration, and HPA support from the sensitization pathway. Frame the dietary work to the client as load-reduction creating space for nervous system work \u2014 not as the destination. Watch for the trial-plateau pattern as confirmation that sensitization is contributing.\n\n→ Use the 'Sensitization' quickpath button at the top of the page to navigate directly to that pathway.",
                                                   children: []
                                                 }
                                               ]
@@ -359,7 +359,7 @@ const TREE = {
                                         {
                                           id: "trigger-food-broad-redirect", type: "gate",
                                           title: "\u2192 Proceed to SENSITIZATION pathway",
-                                          body: "This presentation is best assessed through the sensitization framework. Use the chronic/diffuse \u2192 sensitization branch as the assessment scaffold. Peripheral MC-stabilizing interventions may provide partial relief (peripheral MCs at nerve terminals do participate in the response), but the primary intervention is nervous system regulation.",
+                                          body: "This presentation is best assessed through the sensitization framework. Use the chronic/diffuse \u2192 sensitization branch as the assessment scaffold. Peripheral MC-stabilizing interventions may provide partial relief (peripheral MCs at nerve terminals do participate in the response), but the primary intervention is nervous system regulation.\n\n→ Use the 'Sensitization' quickpath button at the top of the page to navigate directly to that pathway.",
                                           children: []
                                         }
                                       ]
@@ -383,7 +383,7 @@ const TREE = {
                                                 {
                                                   id: "env-atopy-revisit-gate", type: "gate",
                                                   title: "\u2192 Redirect to COMPLEX ATOPY pathway (environmental-led pattern)",
-                                                  body: "Cross to the atopy branch and assess as environmental-led atopy. The intervention strategy shifts: trigger management for identified aeroallergens, immune modulation, MC stabilization \u2014 not nervous-system regulation as the primary frame. (Though sensitization may also be present \u2014 see the atopy-sens-modifier check within that branch.)",
+                                                  body: "Cross to the atopy branch and assess as environmental-led atopy. The intervention strategy shifts: trigger management for identified aeroallergens, immune modulation, MC stabilization \u2014 not nervous-system regulation as the primary frame. (Though sensitization may also be present \u2014 see the atopy-sens-modifier check within that branch.)\n\n→ Use the 'Complex Atopy' quickpath button at the top of the page to navigate directly to that pathway.",
                                                   children: []
                                                 }
                                               ]
@@ -397,7 +397,7 @@ const TREE = {
                                                 {
                                                   id: "mcs-sensitization-redirect", type: "gate",
                                                   title: "\u2192 Proceed to SENSITIZATION pathway",
-                                                  body: "Chemical sensitivity patterns are best addressed through the sensitization framework. Peripheral MC-stabilizing interventions may provide partial relief (MCs at nerve terminals do participate in the response), but the primary intervention is nervous system regulation.",
+                                                  body: "Chemical sensitivity patterns are best addressed through the sensitization framework. Peripheral MC-stabilizing interventions may provide partial relief (MCs at nerve terminals do participate in the response), but the primary intervention is nervous system regulation.\n\n→ Use the 'Sensitization' quickpath button at the top of the page to navigate directly to that pathway.",
                                                   children: []
                                                 }
                                               ]
@@ -795,7 +795,7 @@ function TreeNode({ node, depth, path, expandedSet, toggleExpand, scrollToRef })
         fontSize: 13, color: "#b8b2a6", lineHeight: 1.55,
         fontFamily: "'IBM Plex Sans', Helvetica, sans-serif",
       }}, node.body),
-      node.annotation && isExpanded && h("div", { style: {
+      node.annotation && (isExpanded || !hasChildren) && h("div", { style: {
         marginTop: 10, padding: "10px 12px", background: "rgba(255,255,255,0.04)",
         borderLeft: "3px solid " + config.border, borderRadius: "0 4px 4px 0",
         fontSize: 12.5, color: "#c9c3b8", lineHeight: 1.55,
