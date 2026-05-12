@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clinical Assessment of "Histamine Issues" — v1.1</title>
+  <title>Clinical Assessment of "Histamine Issues" — v2.0</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -165,7 +165,7 @@ const TREE = {
                                       id: "atopy-sens-modifier", type: "question",
                                       title: "Before confirming this pathway: is sensitization amplifying the picture?",
                                       body: "Sensitization can run beneath an apparently atopic presentation and amplify it. Sensitized peripheral nociceptors and enteric neurons generate real tissue-level events including local MC degranulation and neurogenic inflammation \u2014 producing what feels and looks like an allergic reaction but is partly nervous-system-driven. This check is most consequential in the polysensitized / multisystem-from-outset presentation, where the line with idiopathic MCAS-phenomenology is already blurred.",
-                                      annotation: "MARKERS suggesting sensitization is operating as a co-driver: (1) Context-dependence \u2014 the same exposure produces variable responses depending on stress, sleep, emotional state; (2) Expanding reactivity without new immunological exposure \u2014 new intolerances appearing in the absence of obvious sensitization events; (3) Reactions that vary with nervous system state rather than dose; (4) Poor ceiling on standard atopic interventions \u2014 partial improvement from antihistamines, MC stabilizers, and trigger avoidance that plateaus despite compliance; (5) Comorbid sensitization-spectrum conditions (fibromyalgia, IBS, MCS, POTS, migraine, chronic fatigue, hypermobility/EDS, neurodivergence). If multiple markers are present, the atopy framework remains correct but is incomplete \u2014 nervous system regulation needs to be layered into the protocol from the start, not added later when interventions plateau.",
+                                      annotation: "MARKERS suggesting sensitization is operating as a co-driver: (1) Context-dependence \u2014 the same exposure produces variable responses depending on stress, sleep, emotional state; (2) Expanding reactivity without new immunological exposure \u2014 new intolerances appearing in the absence of obvious sensitization events; (3) Reactions that vary with nervous system state rather than dose; (4) Limited progress with standard atopic interventions \u2014 partial improvement from antihistamines, MC stabilizers, and trigger avoidance that plateaus despite compliance; (5) Comorbid sensitization-spectrum conditions (fibromyalgia, IBS, MCS, POTS, migraine, chronic fatigue, hypermobility/EDS, neurodivergence). If multiple markers are present, the atopy framework remains correct but is incomplete \u2014 nervous system regulation needs to be layered into the protocol from the start, not added later when interventions plateau.",
                                       children: [
                                         {
                                           id: "atopy-sens-redirect", type: "gate",
@@ -191,6 +191,12 @@ const TREE = {
                                           id: "atopy-immune-modulation", type: "intervention",
                                           title: "Immune modulation: Th2 \u2192 Th1/Treg rebalancing",
                                           body: "Herbal immunomodulators with evidence for shifting Th2 polarization: Astragalus membranaceus (Th1 support), medicinal mushrooms (Ganoderma, Trametes \u2014 beta-glucan-mediated immune training), Nigella sativa (thymoquinone \u2014 reduces IgE, shifts Th1/Th2 balance). Vitamin D optimization (Th2-dampening). Omega-3 fatty acids (resolvin precursors). Gut-directed work to reduce antigen translocation driving new sensitizations.",
+                                          children: []
+                                        },
+                                        {
+                                          id: "atopy-barrier", type: "intervention",
+                                          title: "Barrier integrity support",
+                                          body: "Impaired barrier function \u2014 epidermal and mucosal \u2014 is upstream of atopic sensitization, not merely a consequence of it. Antigen penetration through a disrupted skin or gut barrier drives new IgE sensitizations in a self-amplifying loop: more sensitizations \u2192 more MC activation \u2192 more barrier damage \u2192 more antigen exposure. Interrupting this cycle is among the most mechanistically upstream interventions available. For skin: emollient therapy is foundational \u2014 ceramide-containing topicals, evening primrose or borage oil topically (GLA supports epidermal lipid barrier), Centella asiatica (tight junction and collagen support). Support skin microbiome and acid mantle. For gut mucosa: see \u2018Gut barrier support\u2019 under GI-dominant.",
                                           children: []
                                         },
                                         {
@@ -309,7 +315,7 @@ const TREE = {
                                               id: "hit-sens-modifier", type: "question",
                                               title: "Before running the trial: is sensitization amplifying the picture?",
                                               body: "Sensitization can run beneath an apparently HIT-pattern presentation and amplify responses to residual histamine load that would otherwise be subclinical. Asking this BEFORE the therapeutic trial is important: it changes how trial results are interpreted, and prevents the common pattern where partial-then-plateau improvement gets misread as 'mostly HIT' when sensitization is the unaddressed amplifier.",
-                                              annotation: "MARKERS suggesting sensitization is operating beneath the HIT pattern: (1) Context-dependence \u2014 the same food produces variable responses depending on stress, sleep, emotional state, with calm-day tolerance and stressed-day reactivity; (2) Expanding reactivity \u2014 the list of 'safe' foods has been shrinking over months/years even with rigorous low-histamine eating; (3) Reactions that don't follow a clear histamine-content gradient even within the high-histamine category; (4) Poor ceiling \u2014 partial improvement from low-histamine diet and DAO that plateaus despite tight compliance; (5) Comorbid sensitization-spectrum conditions (fibromyalgia, IBS, MCS, POTS, migraine, chronic fatigue, hypermobility/EDS, neurodivergence). If multiple markers are present, layer in nervous system regulation alongside the HIT protocol from the start, and interpret the therapeutic trial below with explicit awareness that sensitization may be the rate-limiting factor.",
+                                              annotation: "MARKERS suggesting sensitization is operating beneath the HIT pattern: (1) Context-dependence \u2014 the same food produces variable responses depending on stress, sleep, emotional state, with calm-day tolerance and stressed-day reactivity; (2) Expanding reactivity \u2014 the list of 'safe' foods has been shrinking over months/years even with rigorous low-histamine eating; (3) Reactions that don't follow a clear histamine-content gradient even within the high-histamine category; (4) Only partial improvement from low-histamine diet and DAO that plateaus despite tight compliance; (5) Comorbid sensitization-spectrum conditions (fibromyalgia, IBS, MCS, POTS, migraine, chronic fatigue, hypermobility/EDS, neurodivergence). If multiple markers are present, layer in nervous system regulation alongside the HIT protocol from the start, and interpret the therapeutic trial below with explicit awareness that sensitization may be the rate-limiting factor.",
                                               children: [
                                                 {
                                                   id: "hit-sens-redirect", type: "gate",
@@ -429,6 +435,28 @@ const TREE = {
                   title: "Map the chronic symptom burden",
                   body: "Systematically assess which systems are involved and how they relate to each other:",
                   children: [
+                    {
+                      id: "chronic-atopy-check", type: "question",
+                      title: "Persistent/perennial atopic disease present?",
+                      body: "Eczema, asthma, or allergic rhinitis driven by continuous or near-continuous allergen exposure (dust mite, mold, pet dander) can produce a chronic non-episodic symptom picture: ongoing IgE-mediated mast cell priming without discrete degranulation episodes. These clients may not recognize their presentation as atopic \u2014 persistent rhinitis dismissed as 'sinus issues,' continuous eczema normalized as 'just my skin,' asthma not associated with the systemic fatigue and brain fog accompanying it.",
+                      annotation: "This presentation may not have routed through the episodic atopy branch if the client didn\u2019t identify discrete episodes. The chronic-perennial atopic clients often arrives saying \u2018I just feel bad all the time\u2019 rather than describing flares. The mechanistic frame is IgE-mediated MC priming from ongoing allergen load \u2014 not central sensitization, not HIT.",
+                      children: [
+                        {
+                          id: "chronic-atopy-persistent", type: "branch",
+                          title: "Perennial/persistent atopic disease \u2192 Ongoing IgE-mediated MC priming",
+                          body: "Ongoing allergen exposure maintains continuous IgE-mediated mast cell activation at peripheral sites \u2014 nasal mucosa (perennial rhinitis), skin (persistent eczema), airway (poorly controlled asthma). This is not central sensitization: the primary driver is allergen-specific IgE load, not central gain amplification. The therapeutic logic differs: allergen load reduction and MC stabilization are primary, not nervous system downregulation.",
+                          annotation: "The critical distinction from sensitization: in sensitization, progressive trigger avoidance deepens the problem by reinforcing threat prediction. In persistent atopy, appropriate allergen-specific avoidance is correct and protective. The two can coexist \u2014 sensitization layered on a chronic atopic substrate \u2014 in which case both frameworks apply simultaneously.",
+                          children: [
+                            {
+                              id: "chronic-atopy-gate", type: "gate",
+                              title: "\u2192 Proceed to COMPLEX ATOPY pathway",
+                              body: "The persistent/perennial atopic presentation shares its mechanistic framework and intervention logic with the episodic atopy branch in full. Use the \u2018Complex Atopy\u2019 quickpath button at the top of the page to navigate directly to that pathway.",
+                              children: []
+                            }
+                          ]
+                        }
+                      ]
+                    },
                     {
                       id: "chronic-neuro", type: "question",
                       title: "Nervous system symptoms?",
@@ -849,8 +877,8 @@ var btnStyle = {
 
 var quickPaths = [
   { label: "Safety Screen",    ids: ["root", "safety-screen"] },
-  { label: "HIT Pathway",      ids: ["root", "initial-assessment", "temporal-pattern", "episodic-clear", "episodic-severity", "episodic-moderate", "atopic-history-check", "atopic-history-no", "trigger-type", "trigger-food-specific", "hit-assessment", "hit-drivers", "hit-sens-modifier"] },
-  { label: "Complex Atopy",    ids: ["root", "initial-assessment", "temporal-pattern", "episodic-clear", "episodic-severity", "episodic-moderate", "atopic-history-check", "atopic-history-yes", "atopy-presentation-pattern", "atopy-assessment", "atopy-sens-modifier"] },
+  { label: "HIT Pathway",      ids: ["root", "initial-assessment", "temporal-pattern", "episodic-clear", "episodic-severity", "episodic-moderate", "atopic-history-check", "atopic-history-no", "trigger-type", "trigger-food-specific", "hit-assessment"] },
+  { label: "Complex Atopy",    ids: ["root", "initial-assessment", "temporal-pattern", "episodic-clear", "episodic-severity", "episodic-moderate", "atopic-history-check", "atopic-history-yes"] },
   { label: "Sensitization",    ids: ["root", "initial-assessment", "temporal-pattern", "chronic-diffuse", "chronic-assess-systems", "chronic-neuro", "neuro-prominent", "sensitization-full", "sens-markers"] },
   { label: "Gut-Centered",     ids: ["root", "initial-assessment", "temporal-pattern", "chronic-diffuse", "chronic-assess-systems", "chronic-gi", "gi-dominant", "gut-assessment"] },
   { label: "POTS / Autonomic", ids: ["root", "initial-assessment", "temporal-pattern", "chronic-diffuse", "chronic-assess-systems", "chronic-autonomic", "pots-check"] },
@@ -901,7 +929,7 @@ function HistamineDecisionTree() {
       h("h1", { style: {
         fontSize: 22, fontWeight: 700, fontFamily: "'Source Serif 4', Georgia, serif",
         color: "#e2b659", margin: 0, lineHeight: 1.3,
-      }}, "Clinical Assessment of \u201cHistamine Issues\u201d"),
+      }}, "Clinical Assessment of \u201cHistamine Issues\u201d \u2014 UNFINISHED PROTOTYPE"),
       h("p", { style: {
         fontSize: 13, color: "#888", marginTop: 4, lineHeight: 1.5,
         fontFamily: "'IBM Plex Sans', Helvetica, sans-serif",
@@ -909,7 +937,7 @@ function HistamineDecisionTree() {
       h("p", { style: {
         fontSize: 11, color: "#666", marginTop: 6, lineHeight: 1.5,
         fontFamily: "'IBM Plex Mono', monospace",
-      }}, "v1.1 \u2014 atopic history moved upstream of trigger characterization; sensitization-modifier checks added within the HIT and complex-atopy pathways; aeroallergen-revisit gate added in the environmental branch.")
+      }}, "EXPERIMENTAL - WORK IN PROGESS - Dave Meesters, Terra Sylva School of Botanical Medicine"    ),
     ),
     h("div", { style: { display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 } },
       h("button", { onClick: expandAll, style: btnStyle }, "Expand All"),
